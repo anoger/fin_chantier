@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Fin de chantier</title>
+  <meta name="description" content="Choisir PV, DOE ou Autocontrôle et travailler avec sauvegarde locale."/>
+  <link rel="icon" href="assets/OGNRJLOGO.png"/>
+  <style>
+    :root{
+      --bg:#f7f8fb; --ink:#0f172a; --muted:#64748b; --card:#ffffff;
+      --brand:#10b981; --brand2:#06b6d4; --accent:#f59e0b;
+      --ring:0 0 0 4px rgba(16,185,129,.28);
+      --shadow:0 16px 40px rgba(2,6,23,.08);
+      --radius:22px; --gap:28px;
+      --danger:#ef4444;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; background:var(--bg); color:var(--ink);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Inter, Roboto, Arial, sans-serif;
+      line-height:1.6;
+    }
+    .wrap{max-width:1100px; margin:0 auto; padding: clamp(16px,3vw,30px)}
+    header{display:flex; gap:16px; align-items:flex-end; margin-bottom: var(--gap)}
+    header img{height:48px; width:auto}
+    h1{margin:0; font-size: clamp(26px,3.6vw,36px)}
+    .lead{color:var(--muted); margin-top:6px}
+
+    .notice{display:none; margin-bottom:16px; padding:12px 14px; border-radius:12px;
+      border:1px solid rgba(2,6,23,.1); background:#fff; color:var(--ink)}
+    .notice.on{display:block}
+    .notice strong{color:var(--danger)}
+
+    .panel{background:var(--card); border-radius: var(--radius);
+      padding: clamp(18px,3vw,28px); box-shadow: var(--shadow)}
+    .toolbar{display:flex; justify-content:space-between; align-items:center; gap:12px; color:var(--muted);
+      font-size:14px; margin-bottom: var(--gap)}
+    .toggle{display:flex; align-items:center; gap:10px; background:#fff; border:1px solid rgba(2,6,23,.08); padding:10px 12px; border-radius:12px; box-shadow: var(--shadow)}
+    .grid{display:grid; gap: var(--gap); grid-template-columns: repeat( auto-fit, minmax(270px, 1fr) )}
+    .card{position:relative; display:block; text-decoration:none; color:inherit; background:#fff;
+      border:1px solid rgba(2,6,23,.08); border-radius: var(--radius);
+      padding: clamp(18px,3vw,26px); box-shadow: var(--shadow);
+      transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+      min-height: 180px; cursor:pointer; text-align:left}
+    .card:hover{ transform: translateY(-3px); box-shadow: 0 20px 46px rgba(2,6,23,.12); border-color: rgba(2,6,23,.14) }
+    .card:focus-visible{outline:none; box-shadow: var(--ring)}
+    .kicker{display:flex; align-items:center; gap:10px; font-weight:700; font-size:13px; letter-spacing:.02em}
+    .dot{width:10px; height:10px; border-radius:50%}
+    .pv .dot{background:var(--brand)}
+    .doe .dot{background:var(--brand2)}
+    .auto .dot{background:var(--accent)}
+    .card h2{margin:10px 0 10px; font-size: clamp(18px,2.6vw,22px)}
+    .desc{color:var(--muted); font-size:14px}
+    .cta{margin-top:16px; display:inline-flex; align-items:center; gap:8px; font-weight:600; border:1px solid rgba(2,6,23,.10); padding:10px 14px; border-radius:12px; background:#fff}
+    .badge{position:absolute; top:14px; right:14px; font-size:12px; color:#0b1220; background:#eaf9f1;
+      padding:6px 10px; border-radius:999px; border:1px solid rgba(16,185,129,.45); display:none}
+    .badge.on{display:inline-block}
+
+    footer{margin-top: calc(var(--gap) + 6px); color:var(--muted); font-size:13px}
+    .tips{display:flex; gap:10px; flex-wrap:wrap}
+    .tip{background:#fff; border:1px solid rgba(2,6,23,.08); padding:8px 10px; border-radius:12px}
+
+    /* Overlay viewer */
+    .overlay{position: fixed; inset: 0; background: rgba(15,23,42,.08); backdrop-filter: blur(4px);
+      display:none; z-index: 50}
+    .overlay.on{display:block}
+    .viewer{position: absolute; inset: clamp(10px,2.5vw,24px);
+      background:#fff; border-radius: 18px; box-shadow: 0 20px 50px rgba(2,6,23,.22);
+      display:flex; flex-direction: column; overflow:hidden; border:1px solid rgba(2,6,23,.10)}
+    .bar{display:flex; align-items:center; gap:8px; padding:10px 12px; border-bottom:1px solid rgba(2,6,23,.08); background:#ffffff;
+      position:sticky; top:0; z-index:3}
+    .title{font-weight:700; margin-left:8px}
+    .grow{flex:1}
+    button, .btn{border:1px solid rgba(2,6,23,.12); background:#fff; padding:8px 12px; border-radius:10px; cursor:pointer; font-weight:600; color:inherit; text-decoration:none}
+    button:focus-visible, .btn:focus-visible{outline:none; box-shadow: var(--ring)}
+    button[disabled]{opacity:.55; cursor:not-allowed}
+    iframe{border:0; width:100%; height:100%; flex:1; background:#fff}
+    .state{font-size:12px; color:var(--muted); margin-left:8px}
+    .resume{position:absolute; left:12px; right:12px; bottom:12px; display:none; gap:10px; align-items:center;
+      background:#ffffff; border:1px solid rgba(2,6,23,.14); border-radius:12px; padding:10px 12px; box-shadow: var(--shadow); z-index:4}
+    .resume.on{display:flex}
+    .warnbar{display:none; gap:10px; align-items:center; background:#fff8eb; border:1px solid rgba(245,158,11,.35);
+      color:#7c4a03; padding:8px 10px; border-radius:10px; margin-left:12px}
+    .warnbar.on{display:inline-flex}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <img src="assets/OGNRJLOGO.png" alt="Logo OGER ENERGIES"
+           onerror="this.onerror=null;this.src='assets/OGNRJ LOGO - NOIR.png'">
+      <div>
+        <h1>Fin de chantier</h1>
+        <p class="lead">Choisissez le document validé. Sauvegardez/reprenez votre saisie si besoin.</p>
+      </div>
+    </header>
+
+    <div id="fileNotice" class="notice">
+      <strong>Attention :</strong> vous semblez ouvrir les fichiers en <code>file://</code>.  
+      Pour que la sauvegarde/reprise/print fonctionne, servez le site en HTTP(s) (Live Server, <code>python -m http.server</code>, GitHub Pages…).
+    </div>
+
+    <section class="panel">
+      <div class="toolbar">
+        <div class="toggle">
+          <input type="checkbox" id="newtab">
+          <label for="newtab">Afficher “Ouvrir dans un onglet”</label>
+        </div>
+        <div>Astuce : <kbd>Ctrl/Cmd</kbd> + clic ouvre aussi dans un onglet.</div>
+      </div>
+
+      <div class="grid" role="list">
+        <button class="card pv" data-doc="pv" role="listitem" aria-label="Ouvrir PV">
+          <span class="badge" id="badge-pv">Brouillon</span>
+          <div class="kicker"><span class="dot"></span> PV — Procès-verbal</div>
+          <h2>Procès-verbal de fin de chantier</h2>
+          <p class="desc">Accéder au modèle validé pour signature et archivage.</p>
+          <span class="cta">Ouvrir</span>
+        </button>
+
+        <button class="card doe" data-doc="doe" role="listitem" aria-label="Ouvrir DOE">
+          <span class="badge" id="badge-doe">Brouillon</span>
+          <div class="kicker"><span class="dot"></span> DOE — Dossier des Ouvrages Exécutés</div>
+          <h2>DOE</h2>
+          <p class="desc">Ouvrir le dossier DOE tel que validé par le service.</p>
+          <span class="cta">Ouvrir</span>
+        </button>
+
+        <button class="card auto" data-doc="auto" role="listitem" aria-label="Ouvrir Autocontrôle">
+          <span class="badge" id="badge-auto">Brouillon</span>
+          <div class="kicker"><span class="dot"></span> Autocontrôle</div>
+          <h2>Autocontrôle</h2>
+          <p class="desc">Accéder au formulaire d’autocontrôle validé.</p>
+          <span class="cta">Ouvrir</span>
+        </button>
+      </div>
+    </section>
+
+    <footer>
+      <div class="tips">
+        <div class="tip">Aucun changement sur PV/DOE/Autocontrôle (chargés tels quels).</div>
+        <div class="tip">Sauvegarde locale par document (navigateur&nbsp;→&nbsp;localStorage).</div>
+        <div class="tip">Compatible GitHub Pages (même origine nécessaire).</div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Overlay + viewer -->
+  <div id="overlay" class="overlay" aria-hidden="true">
+    <div class="viewer" role="dialog" aria-modal="true" aria-labelledby="docTitle">
+      <div class="bar">
+        <button id="backBtn">← Retour</button>
+        <span id="docTitle" class="title">Document</span>
+        <span class="grow"></span>
+        <span id="xWarn" class="warnbar">Accès limité (origine différente). Utilisez “Ouvrir dans un onglet”.</span>
+        <a id="openTabBtn" class="btn" target="_blank" rel="noopener">Ouvrir dans un onglet</a>
+        <button id="saveBtn">Sauvegarder</button>
+        <button id="restoreBtn">Reprendre</button>
+        <button id="clearBtn">Effacer</button>
+        <button id="printBtn">Imprimer</button>
+        <span id="state" class="state">Prêt</span>
+      </div>
+      <iframe id="docFrame" title="Document de fin de chantier"></iframe>
+
+      <div id="resumePrompt" class="resume" role="alert">
+        <span>Un brouillon existe pour ce document. Le reprendre&nbsp;?</span>
+        <button id="resumeYes">Oui</button>
+        <button id="resumeNo">Non</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // === CONFIG : chemins vers tes documents validés ===
+    const DOCS = {
+      pv:   { path: "pv/proces_verbal.html",  label: "PV — Procès-verbal" },
+      doe:  { path: "doe/dossier.html",         label: "DOE — Dossier des Ouvrages Exécutés" },
+      auto: { path: "autocontrole/auto_controle.html",label: "Autocontrôle" }
+    };
+
+    // --- helpers
+    const $ = (s, root=document) => root.querySelector(s);
+    const IS_FILE = location.protocol === "file:";
+    if(IS_FILE) $("#fileNotice").classList.add("on");
+
+    // CSS.escape polyfill (simplifié)
+    if (!window.CSS || !CSS.escape) {
+      window.CSS = window.CSS || {};
+      CSS.escape = (s)=> String(s).replace(/[^a-zA-Z0-9_\-]/g, ch =>
+        '\\' + ch.charCodeAt(0).toString(16) + ' ');
+    }
+
+    function cssPath(el){
+      if(el.id) return '#'+CSS.escape(el.id);
+      const parts=[];
+      let node=el;
+      while(node && node.nodeType===1 && node !== node.ownerDocument.documentElement){
+        let sel = node.nodeName.toLowerCase();
+        // prendre 1ère classe si disponible (stabilité visuelle)
+        if(node.classList && node.classList.length){
+          sel += '.'+CSS.escape(node.classList[0]);
+        }
+        if(node.parentElement){
+          const siblings = Array.from(node.parentElement.children)
+            .filter(n => n.nodeName===node.nodeName);
+          if(siblings.length>1){
+            sel += `:nth-of-type(${siblings.indexOf(node)+1})`;
+          }
+        }
+        parts.unshift(sel);
+        node = node.parentElement;
+      }
+      return parts.join(' > ');
+    }
+
+    // --- elements
+    const cards = Array.from(document.querySelectorAll(".card[data-doc]"));
+    const overlay = $("#overlay");
+    const docFrame = $("#docFrame");
+    const openTabBtn = $("#openTabBtn");
+    const saveBtn = $("#saveBtn");
+    const restoreBtn = $("#restoreBtn");
+    const clearBtn = $("#clearBtn");
+    const printBtn = $("#printBtn");
+    const backBtn = $("#backBtn");
+    const state = $("#state");
+    const resumePrompt = $("#resumePrompt");
+    const resumeYes = $("#resumeYes");
+    const resumeNo = $("#resumeNo");
+    const docTitle = $("#docTitle");
+    const newtabToggle = $("#newtab");
+    const xWarn = $("#xWarn");
+
+    let current = null; // {key, path, label}
+    let autosaveBound = false;
+    let canAccessIframe = false;
+
+    const draftKey = (path) => "fdc:draft:" + path;
+    const hasDraft = (path) => !!localStorage.getItem(draftKey(path));
+
+    function refreshBadges(){
+      for(const key of Object.keys(DOCS)){
+        const on = hasDraft(DOCS[key].path);
+        const badge = $("#badge-" + key);
+        if(badge) badge.classList.toggle("on", on);
+      }
+    }
+
+    function getFields(doc){
+      const sel = "input, select, textarea";
+      return Array.from(doc.querySelectorAll(sel))
+        .filter(el => !el.disabled && el.type !== "password" && el.type !== "file");
+    }
+    function getEditables(doc){
+      return Array.from(doc.querySelectorAll('[contenteditable], [contenteditable=""], [contenteditable="true"]'));
+    }
+    function getCanvases(doc){
+      return Array.from(doc.querySelectorAll('canvas'));
+    }
+    const keyOf = (el, idx) => el.name || el.id || ("__q" + idx);
+
+    function setControlsEnabled(enabled){
+      saveBtn.disabled = !enabled;
+      restoreBtn.disabled = !enabled;
+      printBtn.disabled = !enabled;
+      clearBtn.disabled = false; // effacer brouillon toujours possible
+      xWarn.classList.toggle("on", !enabled);
+    }
+
+    function snapshot(){
+      if(!current || !canAccessIframe) return;
+      try{
+        const idoc = docFrame.contentDocument;
+        const win = docFrame.contentWindow;
+        if(!idoc) return;
+
+        const fields = getFields(idoc);
+        const editables = getEditables(idoc);
+        const canvases = getCanvases(idoc);
+
+        const data = { __ts: Date.now(), __editables:{}, __canvases:{} };
+
+        // inputs/selects/textarea
+        fields.forEach((el, i)=>{
+          const k = keyOf(el, i);
+          if(el.tagName === "SELECT"){
+            data[k] = Array.from(el.options).filter(o=>o.selected).map(o=>o.value);
+          }else if(el.type === "checkbox"){
+            data[k] = el.checked;
+          }else if(el.type === "radio"){
+            if(el.name && el.checked){ data[el.name] = el.value; }
+          }else{
+            data[k] = el.value;
+          }
+        });
+
+        // contenteditable → innerHTML pour garder la mise en forme
+        editables.forEach(ed=>{
+          const k = cssPath(ed);
+          if(k) data.__editables[k] = ed.innerHTML;
+        });
+
+        // canvases → image dataURL (signature, dessins, etc.)
+        canvases.forEach(cv=>{
+          try{
+            // PNG : bien pour signature (traits fins), poids généralement faible
+            const k = cssPath(cv);
+            const url = cv.toDataURL("image/png");
+            data.__canvases[k] = { url, w: cv.width, h: cv.height };
+          }catch(e){
+            // canvas "pollué" (tainted) → ignorer
+          }
+        });
+
+        data.__scroll = win.scrollY || idoc.documentElement.scrollTop || idoc.body.scrollTop || 0;
+
+        try{
+          localStorage.setItem(draftKey(current.path), JSON.stringify(data));
+          state.textContent = "Sauvegardé " + new Date(data.__ts).toLocaleTimeString();
+          refreshBadges();
+        }catch(err){
+          state.textContent = "Quota localStorage dépassé (brouillon non sauvegardé)";
+          console.error(err);
+        }
+      }catch(e){
+        console.error(e);
+        state.textContent = "Erreur sauvegarde";
+      }
+    }
+
+    function restore(){
+      if(!current || !canAccessIframe) return;
+      try{
+        const raw = localStorage.getItem(draftKey(current.path));
+        if(!raw){ state.textContent = "Aucun brouillon"; return; }
+        const data = JSON.parse(raw);
+
+        const idoc = docFrame.contentDocument;
+        const win = docFrame.contentWindow;
+        if(!idoc) return;
+
+        const fields = getFields(idoc);
+        const editables = getEditables(idoc);
+        const canvases = getCanvases(idoc);
+
+        // inputs/selects/textarea
+        fields.forEach((el, i)=>{
+          const k = keyOf(el, i);
+          if(el.tagName === "SELECT"){
+            const vals = data[k]; if(!vals) return;
+            Array.from(el.options).forEach(o => o.selected = vals.includes(o.value));
+            el.dispatchEvent(new Event("change", {bubbles:true}));
+          }else if(el.type === "checkbox"){
+            if(k in data){ el.checked = !!data[k]; el.dispatchEvent(new Event("change",{bubbles:true})); }
+          }else if(el.type === "radio"){
+            if(el.name && data[el.name] === el.value){
+              el.checked = true; el.dispatchEvent(new Event("change",{bubbles:true}));
+            }
+          }else{
+            if(k in data){ el.value = data[k]; el.dispatchEvent(new Event("input",{bubbles:true})); }
+          }
+        });
+
+        // contenteditable
+        if(data.__editables){
+          editables.forEach(ed=>{
+            const k = cssPath(ed);
+            if(k && k in data.__editables){
+              ed.innerHTML = data.__editables[k];
+              ed.dispatchEvent(new Event("input",{bubbles:true}));
+            }
+          });
+        }
+
+        // canvases (signature)
+        if(data.__canvases){
+          canvases.forEach(cv=>{
+            const k = cssPath(cv);
+            const rec = data.__canvases[k];
+            if(!rec) return;
+            const img = new Image();
+            img.onload = () => {
+              const ctx = cv.getContext("2d");
+              try{
+                ctx.clearRect(0,0,cv.width,cv.height);
+                // Redimensionner l'image au canvas courant si tailles différentes
+                ctx.drawImage(img, 0, 0, cv.width, cv.height);
+              }catch(e){ /* ignore */ }
+            };
+            img.src = rec.url;
+          });
+        }
+
+        if(typeof data.__scroll === "number"){
+          win.scrollTo({ top: data.__scroll, behavior: "instant" });
+        }
+        state.textContent = "Brouillon repris";
+      }catch(e){
+        console.error(e);
+        state.textContent = "Erreur reprise";
+      }
+    }
+
+    function clearDraft(){
+      if(!current) return;
+      localStorage.removeItem(draftKey(current.path));
+      state.textContent = "Brouillon supprimé";
+      refreshBadges();
+    }
+
+    function attachAutosave(){
+      if(autosaveBound || !canAccessIframe) return;
+      try{
+        const idoc = docFrame.contentDocument;
+        // Saisies classiques + contenteditable (input event)
+        ["input","change","blur"].forEach(type=>{
+          idoc.addEventListener(type, debounce(snapshot, 600), {capture:true});
+        });
+        // Signature/dessins sur canvas : pointer/touch/mouse
+        ["pointerup","mouseup","touchend"].forEach(type=>{
+          idoc.addEventListener(type, debounce(snapshot, 200), {capture:true});
+        });
+        // Secours périodique
+        setInterval(()=> snapshot(), 15000);
+        autosaveBound = true;
+      }catch(e){
+        console.warn("autosave attach failed", e);
+      }
+    }
+    const debounce = (fn, ms)=>{ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), ms); }; };
+
+    function setControlsEnabled(enabled){
+      saveBtn.disabled = !enabled;
+      restoreBtn.disabled = !enabled;
+      printBtn.disabled = !enabled;
+      clearBtn.disabled = false;
+      $("#xWarn").classList.toggle("on", !enabled);
+    }
+
+    function openDoc(key){
+      const def = DOCS[key];
+      current = { key, path: def.path, label: def.label };
+      docTitle.textContent = def.label;
+      overlay.classList.add("on");
+      overlay.setAttribute("aria-hidden","false");
+      state.textContent = "Chargement…";
+      canAccessIframe = false; autosaveBound = false;
+      docFrame.src = def.path;
+      openTabBtn.href = def.path;
+      openTabBtn.style.display = $("#newtab").checked ? "inline-block" : "none";
+      setControlsEnabled(false);
+    }
+
+    function closeViewer(){
+      overlay.classList.remove("on");
+      overlay.setAttribute("aria-hidden","true");
+      docFrame.src = "about:blank";
+      autosaveBound = false;
+      state.textContent = "Prêt";
+      current = null;
+      setControlsEnabled(false);
+    }
+
+    // Cartes
+    cards.forEach(btn=> btn.addEventListener("click", ()=> openDoc(btn.dataset.doc)));
+
+    // Top bar
+    backBtn.addEventListener("click", closeViewer);
+    saveBtn.addEventListener("click", snapshot);
+    restoreBtn.addEventListener("click", restore);
+    clearBtn.addEventListener("click", clearDraft);
+    printBtn.addEventListener("click", ()=>{
+      if(canAccessIframe){
+        try{ docFrame.contentWindow.print(); }catch(e){ window.open(openTabBtn.href, "_blank"); }
+      }else{
+        window.open(openTabBtn.href, "_blank");
+      }
+    });
+
+    // Iframe chargé → test même origine + autosave + prompt reprise
+    docFrame.addEventListener("load", ()=>{
+      try{
+        void docFrame.contentDocument; // si cross-origin, ça jette
+        canAccessIframe = true;
+      }catch(e){ canAccessIframe = false; }
+
+      setControlsEnabled(canAccessIframe);
+
+      if(canAccessIframe){
+        attachAutosave();
+        if(current && hasDraft(current.path)){
+          $("#resumePrompt").classList.add("on");
+        }else{
+          $("#resumePrompt").classList.remove("on");
+          state.textContent = "Aucun brouillon";
+        }
+      }else{
+        $("#resumePrompt").classList.remove("on");
+        state.textContent = IS_FILE
+          ? "Accès limité (file://). Servez le site en HTTP."
+          : "Accès limité (origine différente). Ouvrez dans un onglet.";
+      }
+    });
+
+    // Reprise prompt
+    $("#resumeYes").addEventListener("click", ()=>{ $("#resumePrompt").classList.remove("on"); restore(); });
+    $("#resumeNo").addEventListener("click", ()=>{ $("#resumePrompt").classList.remove("on"); state.textContent = "Prêt"; });
+
+    // Badges + préférences
+    (function init(){
+      refreshBadges();
+      const nt = localStorage.getItem("fdc:newtab")==="1";
+      $("#newtab").checked = nt;
+      $("#newtab").addEventListener("change", ()=>{
+        localStorage.setItem("fdc:newtab", $("#newtab").checked ? "1" : "0");
+        openTabBtn.style.display = $("#newtab").checked ? "inline-block" : "none";
+      });
+    })();
+
+    // Accessibilité : Echap ferme le viewer
+    window.addEventListener("keydown", (e)=>{
+      if(e.key === "Escape" && overlay.classList.contains("on")) closeViewer();
+    });
+  </script>
+</body>
+</html>

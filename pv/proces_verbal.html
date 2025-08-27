@@ -1,0 +1,286 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Procès-Verbal - Autocontrôles Électriques</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: #333;
+            margin: 0;
+            background-color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            padding: 20px 0;
+        }
+
+        .container {
+            width: 21cm;
+            min-height: 29.7cm;
+            background-color: #ffffff;
+            padding: 2cm;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-body {
+            flex-grow: 1;
+        }
+        
+        header {
+            position: relative;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            position: absolute;
+            top: 0;
+            left: 0;
+            max-width: 200px;
+        }
+
+        h1 {
+            color: #005a9e;
+            font-size: 26px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin: 0;
+            line-height: 1.3;
+            padding-top: 100px;
+        }
+        
+        hr {
+            border: none;
+            border-top: 1px solid #e0e0e0;
+            width: 100%;
+            margin-top: 30px;
+        }
+        
+        .info-section {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .info-box {
+            background-color: #f9f9f9;
+            border-left: 4px solid #005a9e;
+            padding: 20px;
+            border-radius: 4px;
+            flex: 1;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        .info-box h2 {
+            font-size: 14px;
+            color: #005a9e;
+            margin-top: 0;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .info-box p, .signature-section .signer-name {
+            margin: 0;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .main-content {
+            margin-bottom: 40px;
+        }
+        
+        .main-content p {
+            margin: 0;
+            font-size: 16px;
+            line-height: 1.6;
+            text-align: justify;
+        }
+
+        .signature-section {
+            margin-top: 50px;
+        }
+        
+        #signature-pad-container {
+            margin-top: 10px;
+        }
+        #signature-pad {
+            border: 2px dashed #ccc;
+            border-radius: 4px;
+            cursor: crosshair;
+        }
+        #clear-signature {
+            margin-top: 10px;
+            padding: 8px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+        }
+        #clear-signature:hover {
+            background-color: #e0e0e0;
+        }
+
+        footer {
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            font-size: 11px;
+            color: #777;
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        [contenteditable="true"] {
+            cursor: text;
+            padding: 5px;
+            border-radius: 3px;
+            outline: 2px dashed transparent;
+            transition: background-color 0.3s, outline 0.3s;
+        }
+        [contenteditable="true"]:hover {
+            background-color: #f0f8ff;
+        }
+        [contenteditable="true"]:focus {
+            background-color: #fff;
+            outline: 2px dashed #007bff;
+        }
+        
+        @media print {
+            body { background-color: #fff; padding: 0; }
+            .container { box-shadow: none; margin: 0; padding: 2cm; }
+            [contenteditable="true"]:hover, [contenteditable="true"]:focus { background-color: transparent; outline: none; }
+            #signature-pad { border-color: transparent; }
+            #clear-signature { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <header>
+            <img src="../assets/OGNRJLOGO.png" alt="Logo OGER ENERGIES" class="logo">
+            
+            <h1>Procès Vebal<br>Autocontrôles Électriques</h1>
+            <hr>
+        </header>
+        
+        <div class="main-body">
+            <section class="info-section">
+                <div class="info-box">
+                    <h2>Chantier</h2>
+                    <p contenteditable="true">
+                        DTI MULSANNE<br>
+                        ZAC du Cormier<br>
+                        72230 MULSANNE
+                    </p>
+                </div>
+                <div class="info-box">
+                    <h2>Référence Chantier</h2>
+                    <p contenteditable="true">23E0224</p>
+                </div>
+            </section>
+
+            <main class="main-content">
+                <p contenteditable="true">
+                    Je soussigné Guillaume Paysant de l'entreprise OGER énergies, en charge de l'installation électrique, atteste avoir procédé aux différentes vérifications électriques. Celles-ci sont consignées dans l'annexe n°2 jointe à ce présent PV.
+                </p>
+            </main>
+
+            <section class="signature-section">
+                <p class="signer-name" contenteditable="true">Fait à Le Mans, le 27/01/2025</p>
+                <p class="signer-name" contenteditable="true" style="margin-top:20px;">G. PAYSANT</p>
+                
+                <div id="signature-pad-container">
+                    <canvas id="signature-pad" width="400" height="150"></canvas>
+                    <div>
+                        <button id="clear-signature">Effacer la signature</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <footer>
+            <p>
+                <b>OGER ENERGIES</b> - 22 Rue André Citroën - ZI Nord - 72000 LE MANS<br>
+                Tél: 02.43.87.11.30 - email: secretariat@oger-energies.com - Site: www.oger-energies.com<br>
+                SARL au capital de 10 000€ - SIRET: 50388076700028 - APE: 4321A - TVA Intra: FR36503880767
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('signature-pad');
+            const ctx = canvas.getContext('2d');
+            const clearButton = document.getElementById('clear-signature');
+            
+            let isDrawing = false;
+            let lastX = 0;
+            let lastY = 0;
+            
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            
+            const getCoords = (e) => {
+                const rect = canvas.getBoundingClientRect();
+                let event = e.touches ? e.touches[0] : e;
+                return [
+                    event.clientX - rect.left,
+                    event.clientY - rect.top
+                ];
+            };
+
+            const startDrawing = (e) => {
+                isDrawing = true;
+                [lastX, lastY] = getCoords(e);
+            };
+            
+            const draw = (e) => {
+                if (!isDrawing) return;
+                e.preventDefault();
+                
+                const [currentX, currentY] = getCoords(e);
+                
+                ctx.beginPath();
+                ctx.moveTo(lastX, lastY);
+                ctx.lineTo(currentX, currentY);
+                ctx.stroke();
+                
+                [lastX, lastY] = [currentX, currentY];
+            };
+            
+            const stopDrawing = () => {
+                isDrawing = false;
+            };
+
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mouseout', stopDrawing);
+
+            canvas.addEventListener('touchstart', startDrawing);
+            canvas.addEventListener('touchmove', draw);
+            canvas.addEventListener('touchend', stopDrawing);
+
+            clearButton.addEventListener('click', () => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trame Mémoire Technique - OGER ENERGIES</title>
+    <!-- Ajout de la bibliothèque PDF.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script>
+        // Configuration nécessaire pour PDF.js
+        pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js`;
+    </script>
+    <style>
+        /* --- CONFIGURATION GÉNÉRALE ET IMPRESSION --- */
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
+
+        body {
+            background-color: #f0f2f5;
+            font-family: 'Montserrat', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 2rem 0;
+            margin: 0;
+        }
+
+        .page {
+            background: white;
+            width: 21cm;
+            height: 29.7cm;
+            margin: 1rem auto;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            box-sizing: border-box;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        @media print {
+            body {
+                background-color: white;
+                padding: 0; margin: 0;
+            }
+            .page {
+                margin: 0;
+                box-shadow: none;
+                page-break-after: always;
+            }
+            .add-page-btn, .page-container:hover .add-page-btn,
+            .remove-section-btn, #add-section-btn {
+                display: none !important;
+            }
+            [contenteditable="true"] {
+                border: none !important;
+            }
+            .new-content-page, .pdf-render-page {
+                padding: 0 !important;
+            }
+        }
+        
+        [contenteditable="true"]:hover, [contenteditable="true"]:focus {
+            outline: 1px dashed #007bff;
+            background-color: rgba(0, 123, 255, 0.05);
+        }
+
+        /* --- BOUTON D'AJOUT DE PAGE --- */
+        .page-container { position: relative; }
+        .add-page-btn {
+            position: absolute; top: 50%; right: -60px;
+            transform: translateY(-50%); width: 45px; height: 45px;
+            background-color: #007bff; color: white; border: none; border-radius: 50%;
+            font-size: 28px; font-weight: bold; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        .page-container:hover .add-page-btn { opacity: 1; right: -55px; }
+        .add-page-btn:hover { background-color: #0056b3; transform: translateY(-50%) scale(1.1); }
+        
+        /* --- ZONES DE DROP --- */
+        .drop-zone {
+            border: 2px dashed #d9d9d9; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; text-align: center;
+            color: #bfbfbf; cursor: pointer; transition: all 0.3s ease;
+            background-size: contain; background-position: center; background-repeat: no-repeat;
+        }
+        .drop-zone.dragover { border-color: #007bff; background-color: rgba(0, 123, 255, 0.05); }
+        .drop-zone .drop-zone-prompt { font-weight: 500; font-size: 1em; padding: 1rem; }
+        .drop-zone.has-content .drop-zone-prompt { display: none; }
+        .hidden-input { display: none; }
+
+        /* --- PAGE DE GARDE --- */
+        .cover-page { padding: 1.5cm; }
+        .cover-header { display: flex; justify-content: space-between; align-items: center; height: 60px; }
+        .cover-header .main-logo { height: 50px; width: auto; }
+        .cover-header .client-logo-zone { height: 100%; width: 200px; border-radius: 8px; }
+        .cover-main-image { width: 100%; height: 12cm; margin: 1.5cm 0; border-radius: 8px; background-size: cover; }
+        .cover-title-block { background-color: #003767; color: white; border-radius: 12px; padding: 1.5cm 1cm; text-align: center; margin: 1cm 0; }
+        .cover-title-block h1 { font-size: 20pt; margin: 0 0 10px 0; font-weight: 700; }
+        .cover-title-block p { font-size: 14pt; margin: 0; }
+        .cover-doc-info { text-align: center; margin-top: 1.5cm; }
+        .cover-doc-info h2 { color: #003767; font-size: 16pt; font-weight: 700; margin: 0; }
+        .cover-doc-info .year { color: #005A9C; font-size: 48pt; font-weight: 700; margin: 10px 0; }
+        .cover-secondary-logo { width: 120px; height: 60px; margin: 1cm auto 0 auto; }
+        .page-footer { margin-top: auto; border-top: 1px solid #e0e0e0; padding-top: 10px; font-size: 8pt; color: #555; display: flex; justify-content: space-around; align-items: center; }
+        .footer-item { display: flex; align-items: center; }
+        .footer-item span:first-child { /* Style for emojis */
+            font-size: 14px;
+            margin-right: 8px;
+        }
+
+        /* --- SOMMAIRE --- */
+        .summary-page { padding: 2cm; }
+        .summary-header { display: flex; justify-content: flex-end; margin-bottom: 2cm; }
+        .summary-header img { height: 50px; }
+        .summary-title { font-size: 28pt; font-weight: 700; color: #333; margin: 0 0 15px 0; padding-bottom: 15px; border-bottom: 4px solid #005A9C; }
+        .summary-list { list-style: none; padding: 0; margin-top: 1cm; }
+        .summary-item { display: flex; align-items: center; padding: 20px 0; border-bottom: 1px solid #e9e9e9; position: relative; }
+        .summary-item .number { font-size: 16pt; font-weight: 700; color: #005A9C; width: 50px; flex-shrink: 0; }
+        .summary-item .text { font-size: 14pt; color: #333; width: 100%; }
+        .summary-page .page-footer { display: flex; justify-content: space-between; }
+        .remove-section-btn {
+            position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+            width: 28px; height: 28px; border-radius: 50%; border: none; background-color: #e44; color: white;
+            font-size: 20px; font-weight: bold; line-height: 28px; cursor: pointer; opacity: 0; transition: opacity 0.2s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .summary-item:hover .remove-section-btn { opacity: 1; }
+        #add-section-btn {
+            margin-top: 20px; padding: 10px 20px; border-radius: 5px; border: 1px solid #005A9C; background-color: white;
+            color: #005A9C; font-weight: bold; cursor: pointer; transition: background-color 0.2s, color 0.2s;
+        }
+        #add-section-btn:hover { background-color: #005A9C; color: white; }
+
+        /* --- PAGES DE TITRE & CONTENU --- */
+        .section-title-page { display: flex; flex-direction: column; padding: 2cm; }
+        .section-title-header img { height: 50px; }
+        .section-title-content { flex: 1; display: flex; align-items: center; justify-content: center; }
+        .section-title-content h2 { font-size: 36pt; color: #003767; text-transform: uppercase; font-weight: 700; text-align: center; }
+        .section-title-page .page-footer { justify-content: center; }
+        .new-content-page { padding: 2cm; }
+        .pdf-render-page { justify-content: center; align-items: flex-start; }
+        .pdf-render-page canvas { max-width: 100%; height: auto; }
+    </style>
+</head>
+<body>
+
+<div id="document-container">
+
+    <!-- PAGE DE GARDE -->
+    <div class="page cover-page">
+        <div class="cover-header"><img src="../assets/OGNRJLOGO.png" alt="Logo Oger Energies" class="main-logo"><div class="drop-zone client-logo-zone"><span class="drop-zone-prompt">Logo Client</span><input type="file" class="hidden-input" accept="image/*"></div></div>
+        <div class="drop-zone cover-main-image"><span class="drop-zone-prompt">Glissez-déposez l'image principale ici<br>ou cliquez pour choisir un fichier</span><input type="file" class="hidden-input" accept="image/*"></div>
+        <div class="cover-title-block"><h1 contenteditable="true">Construction de cellules d'activités</h1><p contenteditable="true">Pour ACTIPARC « Le Petit Parc » 72700 SPAY</p></div>
+        <div class="cover-doc-info"><h2 contenteditable="true">MÉMOIRE TECHNIQUE</h2><div contenteditable="true" class="year">2024</div></div>
+        <div class="drop-zone cover-secondary-logo"><span class="drop-zone-prompt">Logo Secondaire</span><input type="file" class="hidden-input" accept="image/*"></div>
+        <div class="page-footer">
+            <!-- Remplacement des SVGs par des Emojis -->
+            <div class="footer-item" contenteditable="true"><span>📞</span><span>02.43.87.11.30</span></div>
+            <div class="footer-item" contenteditable="true"><span>📧</span><span>secretariat@oger-energies.com</span></div>
+            <div class="footer-item" contenteditable="true"><span>📍</span><span>22 rue André Citroën 72000 Le Mans</span></div>
+        </div>
+    </div>
+
+    <!-- PAGE SOMMAIRE DYNAMIQUE -->
+    <div class="page summary-page">
+        <div class="summary-header"><img src="../assets/OGNRJLOGO.png" alt="Logo Oger Energies"></div>
+        <h1 class="summary-title" contenteditable="true">Sommaire</h1>
+        <ul class="summary-list"><li class="summary-item" data-id="1"><span class="number">1/</span><span class="text" contenteditable="true">Eclairage</span><button class="remove-section-btn">&times;</button></li><li class="summary-item" data-id="2"><span class="number">2/</span><span class="text" contenteditable="true">Eclairage de sécurité</span><button class="remove-section-btn">&times;</button></li><li class="summary-item" data-id="3"><span class="number">3/</span><span class="text" contenteditable="true">Appareillages</span><button class="remove-section-btn">&times;</button></li><li class="summary-item" data-id="4"><span class="number">4/</span><span class="text" contenteditable="true">Informatique</span><button class="remove-section-btn">&times;</button></li><li class="summary-item" data-id="5"><span class="number">5/</span><span class="text" contenteditable="true">Incendie</span><button class="remove-section-btn">&times;</button></li><li class="summary-item" data-id="6"><span class="number">6/</span><span class="text" contenteditable="true">Schémas électriques</span><button class="remove-section-btn">&times;</button></li><li class="summary-item" data-id="7"><span class="number">7/</span><span class="text" contenteditable="true">Plans</span><button class="remove-section-btn">&times;</button></li></ul>
+        <button id="add-section-btn">+ Ajouter une section</button>
+        <div class="page-footer"><span contenteditable="true">OGER ÉNERGIES électricité - 22 rue André Citroën 72000 Le Mans</span><span contenteditable="true">Page 2</span></div>
+    </div>
+
+    <!-- Conteneur pour les pages de titre de section -->
+    <div id="section-pages-container">
+        <div class="page-container" data-id="1"><div class="page section-title-page"><div class="section-title-header"><img src="../assets/OGNRJLOGO.png" alt="Logo Oger Energies"></div><div class="section-title-content"><h2 contenteditable="true">Eclairage</h2></div><div class="page-footer"><span contenteditable="true">OGER ÉNERGIES électricité - 22 rue André Citroën 72000 Le Mans</span></div></div><button class="add-page-btn" title="Ajouter une page">+</button></div>
+        <div class="page-container" data-id="2"><div class="page section-title-page"><div class="section-title-header"><img src="../assets/OGNRJLOGO.png" alt="Logo Oger Energies"></div><div class="section-title-content"><h2 contenteditable="true">Eclairage de sécurité</h2></div><div class="page-footer"><span contenteditable="true">OGER ÉNERGIES électricité - 22 rue André Citroën 72000 Le Mans</span></div></div><button class="add-page-btn" title="Ajouter une page">+</button></div>
+        <div class="page-container" data-id="3"><div class="page section-title-page"><div class="section-title-header"><img src="../assets/OGNRJLOGO.png" alt="Logo Oger Energies"></div><div class="section-title-content"><h2 contenteditable="true">Appareillages</h2></div><div class="page-footer"><span contenteditable="true">OGER ÉNERGIES électricité - 22 rue André Citroën 72000 Le Mans</span></div></div><button class="add-page-btn" title="Ajouter une page">+</button></div>
+        <div class="page-container" data-id="4"><div class="page section-title-page"><div class="section-title-header"><img src="../assets/OGNRJLOGO.png" alt="Logo Oger Energies"></div><div class="section-title-content"><h2 contenteditable="true">Informatique</h2></div><div class="page-footer"><span contenteditable="true">OGER ÉNERGIES électricité - 22 rue André Citroën 72000 Le Mans</span></div></div><button class="add-page-btn" title="Ajouter une page">+</button></div>
+        <div class="page-container" data-id="5"><div class="page section-title-page"><div class="section-title-header"><img src="../assets/OGNRJLOGO.png" alt="Logo Oger Energies"></div><div class="section-title-content"><h2 contenteditable="true">Incendie</h2></div><div class="page-footer"><span contenteditable="true">OGER ÉNERGIES électricité - 22 rue André Citroën 72000 Le Mans</span></div></div><button class="add-page-btn" title="Ajouter une page">+</button></div>
+        <div class="page-container" data-id="6"><div class="page section-title-page"><div class="section-title-header"><img src="../assets/OGNRJLOGO.png" alt="Logo Oger Energies"></div><div class="section-title-content"><h2 contenteditable="true">Schémas électriques</h2></div><div class="page-footer"><span contenteditable="true">OGER ÉNERGIES électricité - 22 rue André Citroën 72000 Le Mans</span></div></div><button class="add-page-btn" title="Ajouter une page">+</button></div>
+        <div class="page-container" data-id="7"><div class="page section-title-page"><div class="section-title-header"><img src="../assets/OGNRJLOGO.png" alt="Logo Oger Energies"></div><div class="section-title-content"><h2 contenteditable="true">Plans</h2></div><div class="page-footer"><span contenteditable="true">OGER ÉNERGIES électricité - 22 rue André Citroën 72000 Le Mans</span></div></div><button class="add-page-btn" title="Ajouter une page">+</button></div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    const summaryList = document.querySelector('.summary-list');
+    const addSectionBtn = document.getElementById('add-section-btn');
+    const sectionPagesContainer = document.getElementById('section-pages-container');
+
+    const renumberSummary = () => {
+        const items = summaryList.querySelectorAll('.summary-item');
+        items.forEach((item, index) => {
+            item.querySelector('.number').textContent = `${index + 1}/`;
+        });
+    };
+
+    // --- SYNCHRONISATION DES TITRES ---
+    summaryList.addEventListener('input', (e) => {
+        if (e.target.classList.contains('text')) {
+            const sectionId = e.target.closest('.summary-item').dataset.id;
+            const newTitle = e.target.textContent;
+            const pageTitleH2 = sectionPagesContainer.querySelector(`.page-container[data-id="${sectionId}"] h2`);
+            if (pageTitleH2) {
+                pageTitleH2.textContent = newTitle;
+            }
+        }
+    });
+
+    summaryList.addEventListener('click', (e) => {
+        if (e.target.classList.contains('remove-section-btn')) {
+            const itemToRemove = e.target.closest('.summary-item');
+            const sectionId = itemToRemove.dataset.id;
+            itemToRemove.remove();
+            const pageToRemove = sectionPagesContainer.querySelector(`.page-container[data-id="${sectionId}"]`);
+            if (pageToRemove) pageToRemove.remove();
+            renumberSummary();
+        }
+    });
+
+    addSectionBtn.addEventListener('click', () => {
+        const newId = Date.now();
+        const defaultTitle = "Nouvelle Section";
+        const newSummaryItem = document.createElement('li');
+        newSummaryItem.className = 'summary-item';
+        newSummaryItem.dataset.id = newId;
+        newSummaryItem.innerHTML = `<span class="number"></span><span class="text" contenteditable="true">${defaultTitle}</span><button class="remove-section-btn">&times;</button>`;
+        summaryList.appendChild(newSummaryItem);
+
+        const newPageContainer = document.createElement('div');
+        newPageContainer.className = 'page-container';
+        newPageContainer.dataset.id = newId;
+        newPageContainer.innerHTML = `
+            <div class="page section-title-page">
+                <div class="section-title-header"><img src="../assets/OGNRJLOGO.png" alt="Logo Oger Energies"></div>
+                <div class="section-title-content"><h2 contenteditable="true">${defaultTitle}</h2></div>
+                <div class="page-footer"><span contenteditable="true">OGER ÉNERGIES électricité - 22 rue André Citroën 72000 Le Mans</span></div>
+            </div>
+            <button class="add-page-btn" title="Ajouter une page">+</button>
+        `;
+        sectionPagesContainer.appendChild(newPageContainer);
+        setupAddPageButton(newPageContainer.querySelector('.add-page-btn'));
+        renumberSummary();
+    });
+
+    function setupDropZone(dropZoneElement) {
+        const inputElement = dropZoneElement.querySelector('.hidden-input');
+        dropZoneElement.addEventListener('click', () => inputElement.click());
+        inputElement.addEventListener('change', (e) => { if (e.target.files.length) handleFile(e.target.files[0], dropZoneElement); });
+        dropZoneElement.addEventListener('dragover', (e) => { e.preventDefault(); dropZoneElement.classList.add('dragover'); });
+        dropZoneElement.addEventListener('dragleave', () => dropZoneElement.classList.remove('dragover'));
+        dropZoneElement.addEventListener('drop', (e) => { e.preventDefault(); dropZoneElement.classList.remove('dragover'); if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0], dropZoneElement); });
+    }
+
+    async function handleFile(file, dropZoneElement) {
+        const prompt = dropZoneElement.querySelector('.drop-zone-prompt');
+
+        if (file.type === 'application/pdf') {
+            if (prompt) prompt.textContent = 'Traitement du PDF...';
+            const fileReader = new FileReader();
+            fileReader.onload = async function() {
+                try {
+                    const typedarray = new Uint8Array(this.result);
+                    const pdfDoc = await pdfjsLib.getDocument(typedarray).promise;
+                    const originalPageContainer = dropZoneElement.closest('.page-container');
+                    let currentTarget = originalPageContainer;
+
+                    for (let i = 1; i <= pdfDoc.numPages; i++) {
+                        const page = await pdfDoc.getPage(i);
+                        const viewport = page.getViewport({ scale: 2.5 });
+                        const newPageNode = document.createElement('div');
+                        newPageNode.className = 'page pdf-render-page';
+                        const canvas = document.createElement('canvas');
+                        const context = canvas.getContext('2d');
+                        canvas.height = viewport.height;
+                        canvas.width = viewport.width;
+                        newPageNode.appendChild(canvas);
+                        await page.render({ canvasContext: context, viewport: viewport }).promise;
+                        currentTarget.insertAdjacentElement('afterend', newPageNode);
+                        currentTarget = newPageNode;
+                    }
+                    originalPageContainer.remove();
+                } catch (error) {
+                    console.error("Erreur PDF:", error);
+                    if(prompt) prompt.textContent = "Erreur de chargement du PDF.";
+                }
+            };
+            fileReader.readAsArrayBuffer(file);
+        }
+        else if (file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = () => { dropZoneElement.style.backgroundImage = `url('${reader.result}')`; dropZoneElement.classList.add('has-content'); };
+            reader.readAsDataURL(file);
+        }
+    }
+    
+    document.querySelectorAll('.drop-zone').forEach(setupDropZone);
+
+    function setupAddPageButton(button) {
+        button.addEventListener('click', () => {
+            const parentContainer = button.parentElement;
+            const newPageContainer = document.createElement('div');
+            newPageContainer.className = 'page-container';
+            const newPage = document.createElement('div');
+            newPage.className = 'page new-content-page';
+            const newDropZone = document.createElement('div');
+            newDropZone.className = 'drop-zone';
+            newDropZone.style.height = '100%';
+            newDropZone.innerHTML = `<span class="drop-zone-prompt">Glissez-déposez un PDF ou une image<br>ou cliquez pour choisir</span><input type="file" class="hidden-input" accept="image/*,application/pdf">`;
+            newPage.appendChild(newDropZone);
+            const newAddButton = document.createElement('button');
+            newAddButton.className = 'add-page-btn';
+            newAddButton.title = 'Ajouter une page';
+            newAddButton.textContent = '+';
+            newPageContainer.append(newPage, newAddButton);
+            parentContainer.insertAdjacentElement('afterend', newPageContainer);
+            setupDropZone(newDropZone);
+            setupAddPageButton(newAddButton);
+        });
+    }
+
+    document.querySelectorAll('.add-page-btn').forEach(setupAddPageButton);
+});
+</script>
+
+</body>
+</html>

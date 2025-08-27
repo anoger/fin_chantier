@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dossier d'Autocontrôle - OGER ENERGIES</title>
+    <style>
+        /* Styles généraux pour l'écran */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #212529;
+            line-height: 1.5;
+        }
+        .container {
+            max-width: 850px;
+            margin: 20px auto;
+            background: #ffffff;
+            padding: 40px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .company-logo {
+            max-width: 350px; /* Ajustez la taille selon vos besoins */
+            height: auto;
+            display: block;
+            margin: 0 auto 30px auto; /* Centre le logo et ajoute un espace en dessous */
+        }
+        h1, h2 {
+            border-bottom: 2px solid #dee2e6;
+            padding-bottom: 10px;
+            margin-top: 20px; /* Espace ajusté */
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-size: 1.6em;
+            text-align: center;
+            color: #4D7ECB; /* Couleur Bleu foncé du logo */
+        }
+        h2 {
+            font-size: 1.4em;
+            background-color: #e9ecef;
+            padding: 12px;
+            border-radius: 5px;
+            color: #7AC0E2; /* Couleur Bleu clair du logo */
+            border-left: 5px solid #4D7ECB; /* Couleur Bleu foncé du logo */
+        }
+        h3 {
+            font-size: 1.1em;
+            color: #FFCC5D; /* Couleur Jaune/doré du logo */
+            margin-top: 30px;
+            border-bottom: 1px solid #e9ecef;
+            padding-bottom: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #dee2e6;
+            padding: 12px;
+            text-align: left;
+            vertical-align: middle;
+        }
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+        
+        /* Largeurs spécifiques pour la table des appareils de mesure */
+        .table-appareils th { text-align: center; } /* Centrage des titres */
+        .table-appareils .col-materiel { width: 45%; }
+        .table-appareils .col-marque { width: 35%; }
+        .table-appareils .col-modele { width: 20%; }
+
+        /* Largeurs et alignement pour les tables de checklist */
+        .checklist-table th {
+            text-align: center; /* Centrage des titres de colonnes */
+        }
+        .checklist-table .th-desc { width: 50%; }
+        .checklist-table .th-check { width: 7%; }
+        .checklist-table .th-comment { width: 29%; }
+
+        td:not(:first-child) {
+            text-align: center;
+        }
+
+        input[type="checkbox"] {
+            transform: scale(1.5);
+            cursor: pointer;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px 25px;
+            margin-top: 20px;
+        }
+        .info-grid label {
+            font-weight: 600;
+        }
+        .info-grid input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .info-grid .full-width {
+            grid-column: 1 / -1;
+        }
+        .checkbox-group {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+        }
+        .checkbox-group label {
+            margin-left: 8px;
+            font-size: 1.1em;
+        }
+        
+        /* Styles pour les champs de la table modifiables */
+        .table-input {
+            width: 100%;
+            border: none;
+            background-color: transparent;
+            padding: 0;
+            margin: 0;
+            font: inherit;
+            color: inherit;
+            text-align: left; /* Aligner le texte des commentaires à gauche */
+            box-sizing: border-box; /* Assure que le padding ne casse pas la mise en page */
+        }
+        
+        textarea.table-input {
+            resize: none; /* Cache la poignée de redimensionnement */
+            overflow-y: hidden; /* Cache la barre de défilement verticale */
+            line-height: 1.5; /* Assure une hauteur de ligne cohérente */
+        }
+
+        /* Styles pour la zone de signature */
+        .signature-box {
+            grid-column: 1 / -1;
+            display: flex;
+            flex-direction: column;
+        }
+        .signature-area {
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+            margin-top: 5px;
+        }
+        #signature-canvas {
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            cursor: crosshair;
+            touch-action: none;
+        }
+        #clear-signature {
+            padding: 5px 10px;
+            font-size: 0.9em;
+            cursor: pointer;
+            border: 1px solid #ced4da;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            margin-bottom: 1px; /* Aligner avec le bas du canvas */
+        }
+        #clear-signature:hover {
+            background-color: #e2e6ea;
+        }
+
+
+        /* Styles pour l'impression */
+        @media print {
+            body {
+                background-color: #fff;
+                font-size: 10pt;
+            }
+            .container {
+                box-shadow: none;
+                border-radius: 0;
+                padding: 0;
+                margin: 0;
+                max-width: 100%;
+            }
+            h1 {
+                margin-top: 15px;
+                margin-bottom: 25px;
+            }
+            h2 {
+                background-color: #e9ecef !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                margin-top: 15px;
+                margin-bottom: 10px;
+                padding: 8px 12px;
+            }
+            h3 {
+                margin-top: 15px;
+            }
+            th, td {
+                padding: 6px; /* Réduction du padding pour compacter les tableaux */
+            }
+            table {
+                margin-top: 10px; /* Réduction de la marge pour compacter */
+            }
+            th {
+                 background-color: #f8f9fa !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            input[type="text"] {
+                border-bottom: 1px solid #999;
+                border-top: none;
+                border-left: none;
+                border-right: none;
+                border-radius: 0;
+            }
+             .table-input {
+                border: none !important;
+             }
+            #clear-signature {
+                display: none; /* Cache le bouton Effacer à l'impression */
+            }
+            #signature-canvas {
+                border: 1px solid #999;
+            }
+            input[type="checkbox"] {
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+                width: 14px;
+                height: 14px;
+                border: 1px solid black;
+                vertical-align: middle;
+                position: relative;
+            }
+            input[type="checkbox"]:checked {
+                background-color: #000 !important;
+                 -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            input[type="checkbox"]:checked::before {
+                content: ''; /* Cache la coche par défaut pour un meilleur contrôle */
+            }
+            @page {
+                size: A4;
+                margin: 20mm;
+            }
+            .no-break {
+                page-break-inside: avoid;
+            }
+            /* Règle pour éviter le saut de page après le titre de l'annexe */
+            .annexe-title {
+                page-break-after: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 1. PAGE DE GARDE -->
+        <div class="header">
+            <!-- Espace pour le logo de l'entreprise -->
+            <img src="../assets/OGNRJLOGO.png" alt="Logo OGER ENERGIES" class="company-logo">
+            <h1>DOSSIER D'AUTOCONTRÔLE DES INSTALLATIONS ELECTRIQUES</h1>
+        </div>
+
+        <div class="no-break">
+            <h2>OUVRAGE FAISANT L'OBJET DES PRESENTS ESSAIS DE FONCTIONNEMENT</h2>
+            <div class="info-grid">
+                <div>
+                    <label for="chantier">N° de chantier:</label>
+                    <input type="text" id="chantier" value="21E0178">
+                </div>
+                <div>
+                    <label for="verificateur">Vérificateur:</label>
+                    <input type="text" id="verificateur" value="M. PIVRON">
+                </div>
+                <div class="full-width">
+                    <label for="ouvrage">Ouvrage concerné:</label>
+                    <input type="text" id="ouvrage" value="Salle polyvalente de Chaufour Notre Dame">
+                </div>
+                <div class="full-width">
+                    <label for="adresse">Adresse:</label>
+                    <input type="text" id="adresse" value="Rue de la Denisière">
+                </div>
+                <div>
+                    <label for="cp">CP:</label>
+                    <input type="text" id="cp" value="72230">
+                </div>
+                 <div>
+                    <label for="date">Date:</label>
+                    <input type="text" id="date" value="mars-23">
+                </div>
+                <div>
+                    <label for="ville">Ville:</label>
+                    <input type="text" id="ville" value="CHAUFOUR NOTRE DAME">
+                </div>
+                <div class="signature-box">
+                    <label>Signature:</label>
+                    <div class="signature-area">
+                        <canvas id="signature-canvas" width="400" height="120"></canvas>
+                        <button type="button" id="clear-signature">Effacer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bloc unifié pour Appareils de mesure ET Réalisation des essais -->
+        <div class="no-break">
+            <div>
+                <h2>APPAREILS DE MESURE</h2>
+                <table class="table-appareils">
+                    <thead>
+                        <tr>
+                            <th class="col-materiel">Matériel utilisé</th>
+                            <th class="col-marque">Marque</th>
+                            <th class="col-modele">Modèle</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="text" class="table-input" value="MULTIMETRE"></td>
+                            <td><input type="text" class="table-input" value="METRIX"></td>
+                            <td><input type="text" class="table-input" value="MX350"></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" class="table-input" value="CONTROLEUR D'INSTALLATION"></td>
+                            <td><input type="text" class="table-input" value="CHAUVIN ARNOUX"></td>
+                            <td><input type="text" class="table-input" value="MX 535"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div>
+                <h2>REALISATION DES ESSAIS ET VERIFICATION DE FONCTIONNEMENT DES INSTALLATIONS</h2>
+                <p>L'entreprise OGER ENERGIES a effectué l'ensemble des essais et vérifications électriques la concernant. Ils sont consignés dans l'ensemble du dossier d'autocontrôle ci-présent.</p>
+                <div class="checkbox-group">
+                    <div>
+                        <input type="checkbox" id="realisation-oui"><label for="realisation-oui">OUI</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="realisation-non"><label for="realisation-non">NON</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. ANNEXE N°2 - AUTOCONTROLES ELECTRIQUES -->
+        <h1 class="annexe-title">ANNEXE N°2 - AUTOCONTROLES ELECTRIQUES</h1>
+        <div class="no-break">
+            <h2>TGBT</h2>
+            <h3>ARMOIRE ELECTRIQUE</h3>
+            <table class="checklist-table">
+                <thead>
+                    <tr><th class="th-desc">Description</th><th class="th-check">C</th><th class="th-check">NC</th><th class="th-check">SO</th><th class="th-comment">COMMENTAIRE</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Réception après transport</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Conformité matériel installé</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Implantation</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Fixation</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Serrage des bornes</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Repérages</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Mise à la terre</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Etiquettage et Schéma électrique présent</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Nettoyage de l'armoire</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                </tbody>
+            </table>
+            <h3>RACCORDEMENT CÂBLES</h3>
+            <table class="checklist-table">
+                <thead>
+                    <tr><th class="th-desc">Description</th><th class="th-check">C</th><th class="th-check">NC</th><th class="th-check">SO</th><th class="th-comment">COMMENTAIRE</th></tr>
+                </thead>
+                 <tbody>
+                    <tr><td>Câblages liaisons extérieures</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Câblages liaisons intérieures</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Serrages des bornes</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Positionnement</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>fixation des câbles</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Repérages des câbles</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Mise à la terre</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                </tbody>
+            </table>
+            <h3>RACCORDEMENT DES APPAREILS</h3>
+            <table class="checklist-table">
+                 <thead>
+                    <tr><th class="th-desc">Description</th><th class="th-check">C</th><th class="th-check">NC</th><th class="th-check">SO</th><th class="th-comment">COMMENTAIRE</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Protection contre les contacts directs</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Protection contre les contacts indirects</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                </tbody>
+            </table>
+            <h3>ESSAIS</h3>
+             <table class="checklist-table">
+                 <thead>
+                    <tr><th class="th-desc">Description</th><th class="th-check">C</th><th class="th-check">NC</th><th class="th-check">SO</th><th class="th-comment">COMMENTAIRE</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Essai protections contre les contacts directs</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Essai protections contre les contacts indirects</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Fonctionnement Arrêt d'Urgence</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                </tbody>
+            </table>
+             <h3>DISJONCTEURS DIVISIONNAIRES</h3>
+             <table class="checklist-table">
+                 <thead>
+                    <tr><th class="th-desc">Description</th><th class="th-check">C</th><th class="th-check">NC</th><th class="th-check">SO</th><th class="th-comment">COMMENTAIRE</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Mise sous tensions disjoncteurs généraux</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Mise sous tension disjoncteurs secondaires</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Contrôle fonctionnement des différentiels</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="no-break">
+            <h2>EQUIPEMENTS TERMINAUX</h2>
+            <h3>PRISES DE COURANT</h3>
+            <table class="checklist-table">
+                <thead>
+                    <tr><th class="th-desc">Description</th><th class="th-check">C</th><th class="th-check">NC</th><th class="th-check">SO</th><th class="th-comment">COMMENTAIRE</th></tr>
+                </thead>
+                 <tbody>
+                    <tr><td>Conformité matériel installé</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Implantation</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Fixation</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Raccordement</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Correspondance repérage plans</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Fiches technique fournisseur (DOE)</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Essais fonctionnement</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                </tbody>
+            </table>
+             <h3>ECLAIRAGE</h3>
+            <table class="checklist-table">
+                <thead>
+                    <tr><th class="th-desc">Description</th><th class="th-check">C</th><th class="th-check">NC</th><th class="th-check">SO</th><th class="th-comment">COMMENTAIRE</th></tr>
+                </thead>
+                 <tbody>
+                    <tr><td>Conformité matériel installé</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Implantation</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Fixation</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Raccordement</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Correspondance repérage plans</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Fiches technique fournisseur (DOE)</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Essais fonctionnement</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="no-break">
+            <h2>CIRCUIT DE TERRE</h2>
+            <h3>FOND DE FOUILLE</h3>
+            <table class="checklist-table">
+                <thead>
+                    <tr><th class="th-desc">Description</th><th class="th-check">C</th><th class="th-check">NC</th><th class="th-check">SO</th><th class="th-comment">COMMENTAIRE</th></tr>
+                </thead>
+                <tbody>
+                     <tr><td>Conformité matériel installé</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Mise à la terre structure métallique</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Fixation par soudure aluminothermique</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Raccordement sur barrette de coupure</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Test de continuité</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Mesure résistance circuit de terre</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                </tbody>
+            </table>
+             <h3>CIRCUIT DE TERRE DES MASSES BT</h3>
+            <table class="checklist-table">
+                <thead>
+                    <tr><th class="th-desc">Description</th><th class="th-check">C</th><th class="th-check">NC</th><th class="th-check">SO</th><th class="th-comment">COMMENTAIRE</th></tr>
+                </thead>
+                <tbody>
+                     <tr><td>Conformité matériel installé</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Raccordement à barrette de terre</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Test de continuité</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Mesure résistance circuit de terre</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Interconnexion</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- 3. ECLAIRAGE DE SECURITE SUR SOURCE CENTRALE -->
+        <div class="no-break">
+            <h2>ECLAIRAGE DE SECURITE SUR SOURCE CENTRALE</h2>
+            <table class="checklist-table">
+                <thead>
+                    <tr><th class="th-desc">Description</th><th class="th-check">C</th><th class="th-check">NC</th><th class="th-check">SO</th><th class="th-comment">COMMENTAIRE</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Conformité matériel installé</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Implantation</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Fixation</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Raccordement</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Présence de 2 circuits d'alimentation éclairage de balisage</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Présence de 2 circuits d'alimentation éclairage d'ambiance</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Présence de 1 circuit d'alimentation éclairage de balisage non-public</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Correspondance repérage plans</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Fiches technique fournisseur</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Essais fonctionnement</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Essais sur batterie source centrale</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- 4. SYSTÈME DE SECURITE INCENDIE -->
+        <div class="no-break">
+            <h2>SYSTÈME DE SECURITE INCENDIE</h2>
+            <table class="checklist-table">
+                <thead>
+                    <tr><th class="th-desc">Description</th><th class="th-check">C</th><th class="th-check">NC</th><th class="th-check">SO</th><th class="th-comment">COMMENTAIRE</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Conformité matériel installé</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Etats des matériels installés (DM, TRE, DSAF, batteries)</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Fixation</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Raccordement</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Câblage des déclencheurs manuels: 1P9/10</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Câblage des DSAF: 2x2,5mm² CR1</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Correspondance repérage plans</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Fiches technique fournisseur</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td colspan="5"><h3>Voyants</h3></td></tr>
+                    <tr><td>Dérangement batterie</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Dérangement secteur</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Dérangement batteries AES</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Dérangement bus de détection</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Dérangement lignes de DSAF</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Tests voyants et signaux sonores</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td colspan="5"><h3>Essais fonctionnement</h3></td></tr>
+                    <tr><td>Temporisation déclenchement d'alarme instantanée (0 min)</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Déclenchement d'alarme depuis chaque DM</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Déclenchement des DSAF par action sur DM</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Déclenchement des DSAF par action sur commande évacuation générale</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Réarmement centrale incendie</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                    <tr><td>Coupure sonorisation magasin JYSK</td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><textarea class="table-input" rows="1"></textarea></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- SCRIPT POUR LA ZONE DE SIGNATURE ---
+            const canvas = document.getElementById('signature-canvas');
+            const ctx = canvas.getContext('2d');
+            const clearButton = document.getElementById('clear-signature');
+            let drawing = false;
+
+            function getEventPos(canvasElem, event) {
+                const rect = canvasElem.getBoundingClientRect();
+                const clientX = event.clientX || event.touches[0].clientX;
+                const clientY = event.clientY || event.touches[0].clientY;
+                return {
+                    x: clientX - rect.left,
+                    y: clientY - rect.top
+                };
+            }
+
+            function startDrawing(e) {
+                e.preventDefault();
+                drawing = true;
+                draw(e);
+            }
+
+            function stopDrawing() {
+                drawing = false;
+                ctx.beginPath();
+            }
+
+            function draw(e) {
+                if (!drawing) return;
+                e.preventDefault();
+                ctx.lineWidth = 2.5;
+                ctx.lineCap = 'round';
+                ctx.strokeStyle = '#000000';
+                const pos = getEventPos(canvas, e);
+                ctx.lineTo(pos.x, pos.y);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(pos.x, pos.y);
+            }
+
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseleave', stopDrawing);
+            canvas.addEventListener('touchstart', startDrawing);
+            canvas.addEventListener('touchend', stopDrawing);
+            canvas.addEventListener('touchmove', draw);
+
+            clearButton.addEventListener('click', () => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            });
+
+            // --- SCRIPT POUR LES ZONES DE COMMENTAIRE AUTO-EXTENSIBLES ---
+            const textareas = document.querySelectorAll('textarea.table-input');
+            
+            function autoResize() {
+                this.style.height = 'auto';
+                this.style.height = this.scrollHeight + 'px';
+            }
+
+            textareas.forEach(textarea => {
+                textarea.addEventListener('input', autoResize, false);
+                // Optionnel: ajuster la taille au chargement si du contenu est déjà présent
+                if (textarea.value) {
+                    autoResize.call(textarea);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

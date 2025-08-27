@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Document – Fin de chantier</title>
+  <style>
+    :root{
+      --bg:#f7f8fb; --ink:#0f172a; --muted:#64748b; --card:#fff;
+      --ring:0 0 0 3px rgba(16,185,129,.25); --shadow:0 10px 26px rgba(2,6,23,.08);
+    }
+    *{box-sizing:border-box} html,body{height:100%}
+    body{margin:0;font-family:ui-sans-serif,system-ui,Segoe UI,Inter,Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+    .bar{
+      position:sticky; top:0; z-index:10; background:var(--card); border-bottom:1px solid rgba(2,6,23,.08);
+      display:flex; gap:10px; align-items:center; padding:10px 12px; box-shadow:var(--shadow);
+    }
+    .bar .sp{flex:1}
+    button,a.btn{
+      border:1px solid rgba(2,6,23,.12); background:#fff; padding:8px 12px; border-radius:10px; cursor:pointer;
+      font-weight:600; text-decoration:none; color:inherit;
+    }
+    button:focus-visible,a.btn:focus-visible{outline:none; box-shadow:var(--ring)}
+    .state{font-size:12px; color:var(--muted)}
+    .wrap{height:calc(100% - 56px)}
+    iframe{width:100%; height:100%; border:0; background:#fff}
+    .prompt{
+      position:fixed; left:12px; right:12px; bottom:12px; z-index:20; background:var(--card); border:1px solid rgba(2,6,23,.12);
+      border-radius:12px; padding:12px; box-shadow:var(--shadow); display:none; gap:10px; align-items:center;
+    }
+  </style>
+</head>
+<body>
+  <div class="bar">
+    <a class="btn" href="./">← Retour</a>
+    <button id="saveBtn">Sauvegarder</button>
+    <button id="restoreBtn">Reprendre</button>
+    <button id="clearBtn">Effacer</button>
+    <div class="sp"></div>
+    <button id="printBtn">Imprimer</button>
+    <span id="state" class="state">Prêt</span>
+  </div>
+  <div class="wrap">
+    <iframe id="doc"></iframe>
+  </div>
+
+  <div id="prompt" class="prompt">
+    <span>Un brouillon existe pour ce document. Le reprendre ?</span>
+    <button id="promptYes">Oui</button>
+    <button id="promptNo">Non</button>
+  </div>
+
+  <script>
+    // --- utils ---
+    const qs = new URLSearchParams(location.search);
+    const url = qs.get("u"); // ex: pv/proces_verbal.html
+    if(!url){ document.body.innerHTML = "<p style='padding:16px'>URL manquante (?u=...)</p>"; throw new Error("no url"); }
+    const KEY = "fdc:draft:" + url; // clé par document
+    const $ = (s)=>document.querySelector(s);
+    const docFrame = $("#doc");
+    const state = $("#state");
+    const promptBox = $("#prompt");
+
+    // charge le document cible
+    docFrame.src = url;
+
+    // --- snapshot/restore ---
+    function getFields(doc){
+      const sel = "input, select, textarea";
+      return Array.from(doc.querySelectorAll(sel))
+        // ignorer champs non pertinents
+        .filter(el => !el.disabled && el.type !== "password" && el.type !== "file");
+    }
+
+    function makeKey(el, idx){
+      return el.name || el.id || (`__q${idx}`);
+    }
+
+    function snapshot(){
+      try{
+        const idoc = docFrame.contentDocument;
+        const win = docFrame.contentWindow;
+        const fields = getFields(idoc);
+        const data = { __ts: Date.now() };
+
+        fields.forEach((el, i)=>{
+          const k = makeKey(el, i);
+          if(el.tagName === "SELECT"){
+            data[k] = Array.from(el.options).filter(o=>o.selected).map(o=>o.value);
+          }else if(el.type === "checkbox"){
+            data[k] = el.checked;
+          }else if(el.type === "radio"){
+            // pour radio, stocker la valeur de la sélection du groupe (name)
+            if(el.name && el.checked){ data[el.name] = el.value; }
+          }else{
+            data[k] = el.value;
+          }
+        });
+
+        // scroll
+        data.__scroll = win.scrollY || idoc.documentElement.scrollTop || idoc.body.scrollTop || 0;
+
+        localStorage.setItem(KEY, JSON.stringify(data));
+        state.textContent = "Sauvegardé " + new Date(data.__ts).toLocaleTimeString();
+      }catch(e){
+        state.textContent = "Erreur sauvegarde";
+        console.error(e);
+      }
+    }
+
+    function restore(){
+      try{
+        const raw = localStorage.getItem(KEY);
+        if(!raw){ state.textContent = "Aucun brouillon"; return; }
+        const data = JSON.parse(raw);
+        const idoc = docFrame.contentDocument;
+        const win = docFrame.contentWindow;
+        const fields = getFields(idoc);
+
+        // appliquer valeurs
+        fields.forEach((el, i)=>{
+          const k = makeKey(el, i);
+          if(el.tagName === "SELECT"){
+            const vals = data[k]; if(!vals) return;
+            Array.from(el.options).forEach(o => o.selected = vals.includes(o.value));
+            el.dispatchEvent(new Event("change", {bubbles:true}));
+          }else if(el.type === "checkbox"){
+            if(k in data){ el.checked = !!data[k]; el.dispatchEvent(new Event("change",{bubbles:true})); }
+          }else if(el.type === "radio"){
+            if(el.name && data[el.name] === el.value){
+              el.checked = true;
+              el.dispatchEvent(new Event("change",{bubbles:true}));
+            }
+          }else{
+            if(k in data){ el.value = data[k]; el.dispatchEvent(new Event("input",{bubbles:true})); }
+          }
+        });
+
+        // scroll
+        if(typeof data.__scroll === "number"){
+          win.scrollTo({ top: data.__scroll, behavior: "instant" });
+        }
+
+        state.textContent = "Brouillon repris";
+      }catch(e){
+        state.textContent = "Erreur reprise";
+        console.error(e);
+      }
+    }
+
+    function clearDraft(){
+      localStorage.removeItem(KEY);
+      state.textContent = "Brouillon supprimé";
+    }
+
+    // --- autosave: on saisie dans le doc ---
+    function attachAutosave(){
+      try{
+        const idoc = docFrame.contentDocument;
+        ["input","change","blur"].forEach(type=>{
+          idoc.addEventListener(type, debounce(snapshot, 600), {capture:true});
+        });
+        // autosave périodique (secours)
+        setInterval(()=>snapshot(), 15000);
+      }catch(e){ console.warn("autosave attach failed", e); }
+    }
+
+    function debounce(fn, ms){
+      let t; return (...args)=>{ clearTimeout(t); t = setTimeout(()=>fn(...args), ms); };
+    }
+
+    // --- boutons ---
+    $("#saveBtn").addEventListener("click", snapshot);
+    $("#restoreBtn").addEventListener("click", restore);
+    $("#clearBtn").addEventListener("click", clearDraft);
+    $("#printBtn").addEventListener("click", () => docFrame.contentWindow.print());
+
+    // au chargement du document : brancher autosave + proposer reprise
+    docFrame.addEventListener("load", ()=>{
+      attachAutosave();
+      const has = !!localStorage.getItem(KEY);
+      if(has){
+        promptBox.style.display = "flex";
+      }else{
+        state.textContent = "Aucun brouillon";
+      }
+    });
+
+    $("#promptYes").addEventListener("click", ()=>{ promptBox.style.display="none"; restore(); });
+    $("#promptNo").addEventListener("click", ()=>{ promptBox.style.display="none"; });
+
+    // accessibilité : focus sur iframe pour tab-naviguer dans le doc
+    window.addEventListener("load", ()=> docFrame.focus());
+  </script>
+</body>
+</html>
