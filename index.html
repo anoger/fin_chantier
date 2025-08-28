@@ -33,6 +33,7 @@
     .pv .dot{background:var(--brand)}
     .doe .dot{background:var(--brand2)}
     .auto .dot{background:var(--accent)}
+    .ppsps .dot{background:#8b5cf6}
 
     /* Notices */
     .notice{display:none; margin-bottom:16px; padding:12px 14px; border-radius:12px; border:1px solid rgba(2,6,23,.1); background:#fff; color:var(--ink)}
@@ -87,6 +88,7 @@
         <h1>Documents de chantier</h1>
         <p class="lead">Sélectionnez le document à compléter, reprenez un brouillon ou imprimez la version finale.</p>
         <div class="indicators" aria-hidden="true">
+          <span class="pill ppsps"><span class="dot"></span> PPSPS</span>
           <span class="pill pv"><span class="dot"></span> PV</span>
           <span class="pill doe"><span class="dot"></span> DOE</span>
           <span class="pill auto"><span class="dot"></span> Autocontrôle</span>
@@ -110,7 +112,19 @@
 
       <h2 id="listeDocsTitle" class="sr-only" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;">Liste des documents disponibles</h2>
 
-      <div class="grid" role="list">
+      <!-- LIGNE 1: PPSPS en pleine largeur -->
+      <div style="margin-bottom: var(--gap);">
+        <button class="card ppsps" data-doc="ppsps" role="listitem" aria-label="Ouvrir PPSPS">
+          <span class="badge" id="badge-ppsps">Brouillon</span>
+          <div class="kicker"><span class="dot" aria-hidden="true"></span> PPSPS — Plan Particulier de Sécurité</div>
+          <h2>PPSPS</h2>
+          <p class="desc">Accéder au plan particulier de sécurité et de protection de la santé.</p>
+          <span class="cta" data-cta>Ouvrir</span>
+        </button>
+      </div>
+      
+      <!-- LIGNE 2: Grille pour PV et Autocontrôle -->
+      <div class="grid" role="list" style="margin-bottom: var(--gap);">
         <button class="card pv" data-doc="pv" role="listitem" aria-label="Ouvrir PV">
           <span class="badge" id="badge-pv">Brouillon</span>
           <div class="kicker"><span class="dot" aria-hidden="true"></span> PV — Procès-verbal</div>
@@ -118,20 +132,23 @@
           <p class="desc">Modèle validé pour signature et archivage.</p>
           <span class="cta" data-cta>Ouvrir</span>
         </button>
-
-        <button class="card doe" data-doc="doe" role="listitem" aria-label="Ouvrir DOE">
-          <span class="badge" id="badge-doe">Brouillon</span>
-          <div class="kicker"><span class="dot" aria-hidden="true"></span> DOE — Dossier des Ouvrages Exécutés</div>
-          <h2>DOE</h2>
-          <p class="desc">Ouvrir le dossier DOE tel que validé par le service.</p>
-          <span class="cta" data-cta>Ouvrir</span>
-        </button>
-
+        
         <button class="card auto" data-doc="auto" role="listitem" aria-label="Ouvrir Autocontrôle">
           <span class="badge" id="badge-auto">Brouillon</span>
           <div class="kicker"><span class="dot" aria-hidden="true"></span> Autocontrôle</div>
           <h2>Autocontrôle</h2>
           <p class="desc">Accéder au formulaire d’autocontrôle validé.</p>
+          <span class="cta" data-cta>Ouvrir</span>
+        </button>
+      </div>
+
+      <!-- LIGNE 3: DOE en pleine largeur -->
+      <div>
+        <button class="card doe" data-doc="doe" role="listitem" aria-label="Ouvrir DOE">
+          <span class="badge" id="badge-doe">Brouillon</span>
+          <div class="kicker"><span class="dot" aria-hidden="true"></span> DOE — Dossier des Ouvrages Exécutés</div>
+          <h2>DOE</h2>
+          <p class="desc">Ouvrir le dossier DOE tel que validé par le service.</p>
           <span class="cta" data-cta>Ouvrir</span>
         </button>
       </div>
@@ -166,9 +183,10 @@
   <script>
     // === CONFIG : chemins vers vos documents validés ===
     const DOCS = {
+      ppsps: { path: "ppsps/ppsps.html",                   label: "PPSPS — Plan Particulier de Sécurité et de Protection de la Santé" },
       pv:   { path: "pv/proces_verbal.html",              label: "PV — Procès-verbal" },
-      doe:  { path: "doe/dossier.html",                   label: "DOE — Dossier des Ouvrages Exécutés" },
-      auto: { path: "autocontrole/auto_controle.html",    label: "Autocontrôle" }
+      auto: { path: "autocontrole/auto_controle.html",    label: "Autocontrôle" },
+      doe:  { path: "doe/dossier.html",                   label: "DOE — Dossier des Ouvrages Exécutés" }
     };
 
     // --- helpers
@@ -367,4 +385,4 @@
     window.addEventListener("keydown", (e)=>{ if(e.key === "Escape" && overlay.classList.contains("on")) closeViewer(); });
   </script>
 </body>
-</html>
+</html>```
