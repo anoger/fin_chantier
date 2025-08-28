@@ -1,0 +1,181 @@
+/*
+    ========================================
+    STYLES GLOBAUX ET VARIABLES
+    ========================================
+*/
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+:root {
+    --brand-blue-dark: #2A64A7; --brand-blue-light: #59BBE6; --brand-yellow: #F4C354;
+    --text-color: #333; --border-color: #cccccc; --background-color: #e9e9e9;
+    --page-background: #ffffff; --header-background: #f8f9fa; --danger-red: #d9534f;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: 'Roboto', sans-serif; background-color: var(--background-color);
+    line-height: 1.5; color: var(--text-color); -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+
+/*
+    ========================================
+    MISE EN PAGE DU DOCUMENT (FORMAT A4)
+    ========================================
+*/
+.page {
+    background: var(--page-background); width: 210mm; min-height: 297mm;
+    margin: 30px auto; padding: 15mm;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); page-break-after: always;
+    display: flex; flex-direction: column;
+}
+.page:last-of-type { page-break-after: avoid; }
+.page > * { margin-bottom: 15px; }
+.page > *:last-child { margin-bottom: 0; }
+
+/*
+    ========================================
+    MISE EN PAGE SPÉCIFIQUE PAGE DE GARDE
+    ========================================
+*/
+.cover-page { justify-content: space-between; }
+.cover-page .page-header { margin-bottom: 0; }
+.cover-main-content {
+    flex-grow: 1; display: flex; flex-direction: column; justify-content: center;
+    text-align: center;
+}
+.operation-item label { font-size: 1.2em; }
+.operation-item textarea {
+    font-size: 1.1em; font-weight: bold; text-align: center; border: none;
+    resize: none; padding: 15px 0;
+}
+.date-item { margin-bottom: 20px; }
+.date-item input { text-align: center; border: none; font-size: 1.1em; }
+
+
+/*
+    ========================================
+    EN-TÊTE, TITRES ET PIED DE PAGE
+    ========================================
+*/
+.page-header { display: flex; align-items: center; gap: 20px; border-bottom: 4px solid var(--brand-blue-dark); padding-bottom: 15px; flex-shrink: 0; }
+.logo { width: 180px; height: auto; flex-shrink: 0; }
+.page-header h1 { font-size: 24px; color: var(--brand-blue-dark); font-weight: 700; line-height: 1.2; }
+.section-title, h2 { background-color: var(--brand-blue-dark); color: white; padding: 8px 15px; margin-top: 20px; font-size: 18px; border-radius: 4px; font-weight: 500; }
+h3 { color: var(--brand-blue-dark); border-bottom: 2px solid var(--brand-blue-light); padding-bottom: 5px; margin-top: 20px; font-size: 16px; }
+h4 { color: #333; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 15px; font-size: 15px; font-weight: 500;}
+footer { border-top: 1px solid var(--border-color); margin-top: auto; padding-top: 10px; text-align: center; font-size: 11px; color: #888; flex-shrink: 0; }
+
+/*
+    ========================================
+    TABLE DES MATIERES (SOMMAIRE)
+    ========================================
+*/
+.toc { border: 1px solid var(--border-color); padding: 15px; border-radius: 4px; }
+.toc h2 { margin: 0 0 15px 0; background-color: transparent; color: var(--brand-blue-dark); padding: 0; text-align: center; }
+.toc-list { list-style: none; padding: 0; font-size: 13px; }
+.toc-list li { display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px dotted var(--border-color); }
+.toc-list li:last-child { border-bottom: none; }
+.toc-list span:first-child { padding-right: 10px; }
+.toc-list span:last-child { font-weight: bold; }
+.toc-list .sub-item { padding-left: 15px; }
+.toc-list .sub-item-level2 { padding-left: 30px; }
+
+/*
+    ========================================
+    FORMULAIRES (CHAMPS ÉDITABLES)
+    ========================================
+*/
+label { display: block; font-weight: 500; margin: 8px 0 3px 0; font-size: 14px; color: var(--brand-blue-dark); }
+input[type="text"], input[type="date"], input[type="number"], textarea {
+    width: 100%; padding: 6px 8px; border: 1px solid var(--border-color); border-radius: 4px;
+    font-family: inherit; font-size: 14px; background-color: #fdfdfd; transition: border-color 0.3s, box-shadow 0.3s;
+    line-height: 1.4;
+}
+input:focus, textarea:focus { outline: none; border-color: var(--brand-yellow); box-shadow: 0 0 5px rgba(244, 195, 84, 0.5); }
+textarea { resize: none; overflow: hidden; } /* JS gère la hauteur */
+
+/*
+    ========================================
+    TABLEAUX ET GRILLES
+    ========================================
+*/
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { border: 1px solid var(--border-color); padding: 6px 8px; text-align: left; vertical-align: top; word-break: break-word; }
+th { background-color: var(--header-background); font-weight: 500; }
+td input, td textarea { border: none; padding: 0; font-size: 13px; background: transparent; }
+
+/*
+    ========================================
+    ÉLÉMENTS SPÉCIFIQUES
+    ========================================
+*/
+.signatures-header { display: flex; gap: 20px; flex-shrink: 0; }
+.signature-box { flex: 1; border: 1px solid var(--border-color); padding: 15px; border-radius: 4px; display: flex; flex-direction: column; }
+.signature-box label { font-weight: bold; margin-top: 0; }
+.signature-box input { margin-top: 10px; }
+/* === NOUVEAU : Styles pour la zone de signature === */
+.signature-pad { flex-grow: 1; display: flex; flex-direction: column; gap: 5px; }
+.signature-canvas { background: #f9f9f9; border: 1px dashed #ddd; cursor: crosshair; touch-action: none; /* Important pour le tactile */ }
+.clear-signature-btn {
+    align-self: flex-end; /* Aligne le bouton à droite */
+    padding: 2px 8px; font-size: 11px; cursor: pointer; border: 1px solid #ccc;
+    background-color: #f1f1f1; border-radius: 3px;
+}
+
+.emergency-contacts-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.contact-card { background-color: var(--header-background); border-left: 5px solid var(--brand-yellow); padding: 10px; border-radius: 4px; }
+.contact-card strong { display: block; color: var(--brand-blue-dark); font-size: 13px; }
+.contact-card input { font-size: 1em; font-weight: 500; border: none; padding: 2px; width: 100%; }
+.safety-warning { background-color: #fff9e6; border: 1px solid var(--brand-yellow); border-left-width: 5px; padding: 15px; border-radius: 4px; font-size: 14px; }
+.signature-section { border: 1px solid var(--border-color); padding: 20px; border-radius: 5px; }
+.signature-line { display: flex; justify-content: space-between; margin-top: 40px; padding-top: 10px; }
+
+/* === NOUVEAU : Classe pour empêcher le saut de page à l'impression === */
+.prevent-print-break {
+    page-break-inside: avoid;
+}
+
+/*
+    ========================================
+    AFFICHE D'URGENCE
+    ========================================
+*/
+.accident-poster { display: flex; flex-direction: column; height: 100%; border: 4px solid var(--danger-red); flex-grow: 1; }
+.poster-header { background-color: var(--danger-red); color: white; text-align: center; font-size: 28px; font-weight: bold; padding: 12px; }
+.poster-main { display: grid; grid-template-columns: 3fr 2fr; flex-grow: 1; }
+.poster-instructions { padding: 10px; border-right: 2px solid var(--danger-red); }
+.poster-phone input { text-align: center; font-size: 14px; font-weight: bold; background-color: #f2f2f2; padding: 8px; border: 1px solid var(--border-color); }
+.poster-instructions h2 { background-color: transparent; color: var(--text-color); margin: 5px 0; padding: 0; font-size: 18px; text-align: center; border: none;}
+.poster-step { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; }
+.step-number { background-color: var(--danger-red); color: white; font-size: 22px; font-weight: bold; border-radius: 50%; width: 35px; height: 35px; display: flex; justify-content: center; align-items: center; flex-shrink: 0; }
+.step-content { width: 100%; }
+.step-content label { font-size: 13px; margin: 0 0 3px 0; color: #333; }
+.step-content textarea { font-size: 13px; }
+.poster-contacts { padding: 10px; background: #fdfdfd; }
+.poster-contacts h3 { text-align: center; margin: 0 0 10px 0; border: none; }
+.contact-item { display: flex; gap: 5px; border-bottom: 1px solid var(--border-color); align-items: center; }
+.contact-item:last-child { border-bottom: none; }
+.contact-item input { border: none; padding: 5px 2px; font-size: 12px; }
+.contact-item input:first-child { flex: 1; font-weight: bold; }
+.contact-item input:last-child { flex-basis: 110px; text-align: right; flex-shrink: 0; }
+
+/*
+    ========================================
+    BOUTON D'IMPRESSION ET STYLES D'IMPRESSION
+    ========================================
+*/
+.actions-container { position: sticky; top: 0; z-index: 100; padding: 10px; text-align: center; background-color: #333; }
+#print-button { background-color: var(--brand-blue-dark); color: white; padding: 10px 25px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; transition: background-color 0.3s; }
+#print-button:hover { background-color: var(--brand-blue-light); }
+
+@media print {
+    body { background-color: #fff; }
+    .page { margin: 0; padding: 10mm; box-shadow: none; border: none; min-height: 290mm; }
+    .actions-container { display: none; }
+    /* === NOUVEAU : On cache les boutons "Effacer" à l'impression === */
+    .clear-signature-btn { display: none; }
+    input, textarea { border: 1px solid transparent !important; background: #fff !important; }
+    .accident-poster { border-width: 2px; }
+    .poster-header, .step-number { background-color: var(--danger-red) !important; }
+    table, .poster-main { page-break-inside: avoid; }
+    h2, h3, h4 { page-break-after: avoid; }
+}

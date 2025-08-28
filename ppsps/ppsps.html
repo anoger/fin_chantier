@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PPSPS Final Modifiable - OGER ENERGIES</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="actions-container">
+        <button id="print-button">Imprimer / Générer PDF</button>
+    </div>
+
+    <!-- PAGE 1: Nouvelle Page de Garde (Conforme à l'original) -->
+    <div class="page cover-page">
+        <header class="page-header">
+            <img src="../assets/OGNRJLOGO.png" alt="Logo OGER ENERGIES" class="logo">
+            <h1>PLAN PARTICULIER DE SECURITE ET DE PROTECTION DE LA SANTE</h1>
+        </header>
+
+        <main class="cover-grid">
+            <section class="cover-details">
+                <h2>Informations sur l'Opération</h2>
+                <div class="meta-item">
+                    <label>Le :</label>
+                    <input type="text" value="22 mai 2025">
+                </div>
+                <div class="meta-item">
+                    <label>Opération :</label>
+                    <textarea rows="5">SCI CYRONO 
+Extension d’un atelier de production FORP et construction de 2 cellules artisanales
+ZAC de l’Epine 72460 SAVIGNE L’EVEQUE</textarea>
+                </div>
+                 <div class="meta-item">
+                    <label>Lot N° :</label>
+                    <input type="text" value="07 - Electricité/VMC">
+                </div>
+            </section>
+            <section class="cover-contacts">
+                <h2>Intervenants Principaux</h2>
+                <div class="meta-item">
+                    <label>Entreprise :</label>
+                    <textarea rows="4">OGER ENERGIES
+22 rue André Citroën
+72000 LE MANS
+Tél : 02.43.87.11.30</textarea>
+                </div>
+                <div class="meta-item">
+                    <label>Coordonnateur S.P.S. :</label>
+                     <textarea rows="4">M. JARDIN Jacky
+3 bis Chemin du feu
+72460 SAVIGNE L’EVEQUE
+Tél : 06.18.06.17.58</textarea>
+                </div>
+            </section>
+        </main>
+
+        <footer class="signatures-header">
+            <div class="signature-box">
+                <label>Date et visa OGER ENERGIES</label>
+                <input type="text" value="Jean-Luc OGER, Le 22/05/2025">
+                <!-- MODIFICATION : Remplacement du placeholder par un canvas -->
+                <div class="signature-pad">
+                    <canvas id="signature-canvas-oger" class="signature-canvas" style="height: 60px;"></canvas>
+                    <button type="button" class="clear-signature-btn" data-canvas-id="signature-canvas-oger">Effacer</button>
+                </div>
+            </div>
+            <div class="signature-box">
+                <label>Date et visa Coordonnateur S.P.S.</label>
+                <input type="text">
+                <!-- MODIFICATION : Remplacement du placeholder par un canvas -->
+                <div class="signature-pad">
+                    <canvas id="signature-canvas-sps" class="signature-canvas" style="height: 60px;"></canvas>
+                    <button type="button" class="clear-signature-btn" data-canvas-id="signature-canvas-sps">Effacer</button>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- PAGE 2: Sommaire (Isolé sur sa propre page) -->
+    <div class="page">
+        <div class="toc">
+            <h2>TABLE DES MATIERES</h2>
+            <ul class="toc-list">
+                <li><span>TABLES DES MATIERES</span><span>2</span></li>
+                <li><span>Plan général de coordination (PGC) de référence</span><span>3</span></li>
+                <li><span>Révisions du PPSPS</span><span>3</span></li>
+                <li><span>1 - RENSEIGNEMENTS GENERAUX</span><span>4</span></li>
+                <li class="sub-item"><span>1.1 Identification de l’affaire</span><span>4</span></li>
+                <li class="sub-item"><span>1.2 Adresse du chantier</span><span>4</span></li>
+                <li class="sub-item"><span>1.3 Nature des travaux</span><span>5</span></li>
+                <li class="sub-item"><span>1.4 Coordonnateur de Sécurité</span><span>5</span></li>
+                <li class="sub-item"><span>1.5 L’entreprise</span><span>5</span></li>
+                <li class="sub-item"><span>1.6 Organisation Interne</span><span>6</span></li>
+                <li class="sub-item"><span>1.7 Organisation Externe prévention</span><span>6</span></li>
+                <li class="sub-item"><span>1.7 Organisation Externe Chantier</span><span>7</span></li>
+                <li class="sub-item"><span>1.8 Effectif de l’entreprise sur le chantier</span><span>7</span></li>
+                <li><span>2 - MESURES DE PREVENTION DE SECURITE ET D’HYGIENE</span><span>8</span></li>
+                <li class="sub-item"><span>2.1 Coordonnateur</span><span>8</span></li>
+                <li class="sub-item"><span>2.2 Surveillance médicale spéciale</span><span>8</span></li>
+                <li class="sub-item"><span>2.3 consignes de premier secours</span><span>9</span></li>
+                <li class="sub-item-level2"><span>2.3.1 Secouriste du chantier</span><span>9</span></li>
+                <li class="sub-item-level2"><span>2.3.2 Matériel de 1er Secours existant sur le chantier</span><span>10</span></li>
+                <li class="sub-item-level2"><span>2.3.3 INCENDIE - ACCIDENT - (Mesures en dehors des heures normales)</span><span>11</span></li>
+                <li class="sub-item"><span>2.4 Installations de chantier</span><span>12</span></li>
+                <li><span>3 - MESURES DE PREVENTION</span><span>13</span></li>
+                <li class="sub-item"><span>3.1 MESURES DE SECURITE</span><span>13</span></li>
+                <li class="sub-item"><span>3.2 RISQUES GENERES PAR L’ACTIVITE DE L’ENTREPRISE SUR SES PROPRES SALARIES</span><span>15</span></li>
+                <li class="sub-item"><span>3.3 RISQUES GENERES PAR L’ACTIVITE DE L’ENTREPRISE SUR LES SALARIES DES AUTRES INTERVENANTS</span><span>15</span></li>
+                <li class="sub-item"><span>3.4 RISQUES GENERES PAR LES AUTRES ENTREPRISES, LE CHANTIER ET L’ENVIRONNEMENT</span><span>16</span></li>
+                <li><span>SIGNATURES</span><span>17</span></li>
+                <li><span>4 - PRESENTATION DU PPSPS AU PERSONNEL DE CHANTIER</span><span>18</span></li>
+                <li><span>Ci-joint affiches « En cas d’accident »</span><span>19</span></li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- PAGE 3: Révisions et début des Renseignements Généraux -->
+    <div class="page">
+        <h3>Plan général de coordination (PGC) de référence</h3>
+        <table>
+            <thead><tr><th>Indice</th><th>Date</th><th>Chapitre/paragraphe</th><th>Objet de la révision</th></tr></thead>
+            <tbody><tr><td><textarea>A01</textarea></td><td><textarea>06/08/2024</textarea></td><td><textarea>PGSC SPS</textarea></td><td><textarea></textarea></td></tr></tbody>
+        </table>
+
+        <h3>Révisions du PPSPS</h3>
+        <table>
+            <thead><tr><th>Indice</th><th>Date</th><th>Chapitre/paragraphe</th><th>Objet de la révision</th></tr></thead>
+            <tbody>
+                <tr><td><textarea></textarea></td><td><textarea></textarea></td><td><textarea></textarea></td><td><textarea></textarea></td></tr>
+                <tr><td><textarea></textarea></td><td><textarea></textarea></td><td><textarea></textarea></td><td><textarea></textarea></td></tr>
+            </tbody>
+        </table>
+        
+        <h2 class="section-title">1 - RENSEIGNEMENTS GENERAUX</h2>
+        <h3>1.1 Identification de l’affaire</h3>
+        <table>
+            <tr><td>Nom du Chantier :</td><td colspan="3"><textarea rows="2">Extension d’un atelier de production FORP et construction de 2 cellules artisanales</textarea></td></tr>
+            <tr><td>Lot N°:</td><td><textarea>07</textarea></td><td>Désignation :</td><td><textarea>Electricité/VMC</textarea></td></tr>
+            <tr><td>Communication du PGC par M. :</td><td><textarea>M. JARDIN Jacky</textarea></td><td>le :</td><td><textarea></textarea></td></tr>
+            <tr><td>Communication des PPSPS utiles par M :</td><td><textarea>M. OGER Jean-Luc</textarea></td><td>le :</td><td><textarea>22/05/2025</textarea></td></tr>
+            <tr><td>Première inspection commune avec :</td><td><textarea>M. JARDIN Jacky</textarea></td><td>S’est déroulé le :</td><td><textarea>27/05/2025</textarea></td></tr>
+            <tr><td>En présence de :</td><td colspan="3"><textarea>M. OGER Jean-Luc</textarea></td></tr>
+        </table>
+    </div>
+    
+    <!-- Les autres pages suivent... -->
+    
+    <div class="page">
+        <h3>1.2 Adresse du chantier</h3>
+        <table>
+            <tr><td>Adresse de l’accès au chantier :</td><td><textarea>ZAC de l’Epine 72460 SAVIGNE L’EVEQUE</textarea></td></tr>
+            <tr><td>Téléphone :</td><td><textarea>02.43.82.40.52</textarea></td></tr>
+            <tr><td>Fax :</td><td><textarea></textarea></td></tr>
+            <tr><td>Point de repère :</td><td><textarea></textarea></td></tr>
+        </table>
+
+        <h3>1.3 Nature des travaux</h3>
+        <label>Résumé des travaux confiés à l’entreprise :</label>
+        <textarea rows="4">- Distribution électrique, installation d’éclairage et prises de courant
+- Câblage informatique
+- Mise en service et tests électriques.</textarea>
+        <table>
+            <thead><th></th><th>Début des travaux</th><th>Délai d’exécution</th></thead>
+            <tbody>
+                <tr><td>Pour l’entreprise</td><td><textarea>Semaine 25</textarea></td><td><textarea>2 mois</textarea></td></tr>
+                <tr><td>Pour la sous traitance</td><td><textarea>sans objet</textarea></td><td><textarea>sans objet</textarea></td></tr>
+            </tbody>
+        </table>
+
+        <h3>1.4 Coordonnateur de Sécurité</h3>
+        <textarea rows="4">Nom : M. JARDIN Jacky
+Adresse : 3 bis Chemin du feu 72460 SAVIGNE L’EVEQUE
+Tél. : 02.43.27.50.79
+Portable : 06.18.06.17.58</textarea>
+        
+        <h3>1.5 L’entreprise</h3>
+        <textarea rows="5">OGER ENERGIES
+22 rue André Citroën
+72000 LE MANS
+Téléphone: 02.43.87.11.30
+E. mail : secretriat@oger-energies.com</textarea>
+    </div>
+
+    <div class="page">
+        <h3>1.6 Organisation Interne</h3>
+        <table>
+            <tr><td>Chef d’entreprise :</td><td><textarea>M. OGER Jean-Luc</textarea></td><td>Tél. <textarea>02.43.87.11.30</textarea></td></tr>
+            <tr><td>Responsable de chantier :</td><td><textarea>M. CORDIER Damien</textarea></td><td>Tél. <textarea>06.37.79.26.50</textarea></td></tr>
+            <tr><td>Rédacteur du P.P.S.P.S. :</td><td><textarea>M. OGER Jean-Luc</textarea></td><td>Tél. <textarea>02.43.87.11.30</textarea></td></tr>
+        </table>
+
+        <h3>1.7 Organisation Externe prévention</h3>
+        <table>
+            <tr><td>CARSAT</td><td><textarea>M.LIGER</textarea></td><td>Tél. <textarea>02 51 72 82.92</textarea></td></tr>
+            <tr><td>DIRRECTE Inspection du travail</td><td><textarea></textarea></td><td>Tél. <textarea>02 43.39.41.41</textarea></td></tr>
+            <tr><td>Délégué à la sécurité OPPBTP</td><td><textarea></textarea></td><td>Tél. <textarea>02.40.49.68.02</textarea></td></tr>
+            <tr><td>Médecine du travail</td><td><textarea></textarea></td><td>Tél. <textarea>02 43 74.04.04</textarea></td></tr>
+        </table>
+
+        <h3>1.7 Organisation Externe Chantier</h3>
+         <table>
+            <tr><td>Maître d’ouvrage</td><td><textarea>SCI CYRONO</textarea></td><td>Tél. <textarea>02.43.82.40.52</textarea></td></tr>
+            <tr><td>Maître d’œuvre</td><td><textarea>ACTION PROJET</textarea></td><td>Tél. <textarea>02.43.76.24.81</textarea></td></tr>
+            <tr><td>Coordination Sécurité</td><td><textarea>JARDIN Jacky</textarea></td><td>Tél. <textarea>06.18.06.17.58</textarea></td></tr>
+            <tr><td>ENEDIS</td><td><textarea></textarea></td><td>Tél. <textarea>01.81.62.47.01</textarea></td></tr>
+            <tr><td>GRDF</td><td><textarea></textarea></td><td>Tél. <textarea>0810.433.072</textarea></td></tr>
+            <tr><td>France TELECOM</td><td><textarea></textarea></td><td>Tél. <textarea>02.43.77.80.00</textarea></td></tr>
+            <tr><td>Déminage</td><td><textarea>Défense de protection civile Préfecture</textarea></td><td>Tél. <textarea>02.43.39.17.79</textarea></td></tr>
+        </table>
+
+        <h3>1.8 Effectif de l’entreprise sur le chantier</h3>
+        <table>
+            <thead><tr><th>Mois ou semaine</th><th><input type="text" value="Juin 2025"></th><th><input type="text" value="Juillet 2025"></th><th><input type="text" value="Août 2025"></th></tr></thead>
+            <tbody><tr><td>Effectifs prévisibles</td><td><input type="number" value="2"></td><td><input type="number" value="2"></td><td><input type="number" value="2"></td></tr></tbody>
+        </table>
+    </div>
+    
+    <div class="page">
+        <h2 class="section-title">2 - MESURES DE PREVENTION DE SECURITE ET D’HYGIENE</h2>
+        <h3>2.1 Coordonnateur</h3>
+        <textarea rows="2">Préciser les consignes issues du PGC ou particulières à l’entreprise : SANS OBJET</textarea>
+
+        <h3>2.2 Surveillance médicale spéciale</h3>
+        <table>
+            <thead><tr><th>Poste necessitant une surveillance speciale</th><th>Personnel concerné</th></tr></thead>
+            <tbody><tr><td><textarea>SANS OBJET</textarea></td><td><textarea>SANS OBJET</textarea></td></tr></tbody>
+        </table>
+        
+        <h3>2.3 consignes de premier secours</h3>
+        <div class="safety-warning">
+            EN CAS D’ACCIDENT GRAVE LE TEMOIN DOIT : GARDER SON SANG FROID → PROTEGER LA VICTIME → ALERTER SERVICE SECURITE → GUIDER LES SECOURS → SECOURIR
+        </div>
+        
+        <h4>2.3.1 Secouriste du chantier :</h4>
+        <table>
+            <thead><tr><th>NOMS</th><th>Présence sur le Site</th></tr></thead>
+            <tbody>
+                <tr><td><textarea></textarea></td><td><textarea></textarea></td></tr>
+                <tr><td><textarea></textarea></td><td><textarea></textarea></td></tr>
+            </tbody>
+        </table>
+
+        <h4>2.3.2 Matériel de 1er Secours existant sur le chantier:</h4>
+        <textarea rows="2">Le responsable de chantier OGER ENERGIES possède une trousse de secours. L’emplacement de la trousse se situe dans le véhicule de chantier.</textarea>
+        
+        <!-- MODIFICATION : Ajout d'un conteneur avec la classe .prevent-print-break -->
+        <div class="prevent-print-break">
+            <label>Description du type de matériel :</label>
+            <textarea rows="9">1 coussin Hémostatique, 2 épingle de sûreté, 10 compresses grand modèle, 10 pansements auto adhésifs, 1 pansements gras pour brûlures, 1 bande de gaz élastique, 1 flacon compte-gouttes pour détergent antiseptique, 1 rouleau de sparadrap, 3 doses individuelles de bain oculaire, 1 pince à écharde, 1 paire de ciseaux à bouts ronds, 1 flacon de mercurochrome, Gaz et coton hydrophile, Alcool 90°, 1 doigtier</textarea>
+        </div>
+    </div>
+    
+    <div class="page">
+        <h3>2.3.3 INCENDIE - ACCIDENT - (Contacts d'Urgence)</h3>
+        <div class="emergency-contacts-grid">
+             <div class="contact-card"><strong>POMPIERS</strong><input type="text" value="18 ou 112"></div>
+            <div class="contact-card"><strong>S.A.M.U.</strong><input type="text" value="15"></div>
+            <div class="contact-card"><strong>POLICE SECOURS</strong><input type="text" value="17"></div>
+            <div class="contact-card"><strong>SOS MAINS</strong><input type="text" value="02.43.77.62.62"></div>
+            <div class="contact-card"><strong>OPHTALMOLOGISTE</strong><input type="text" value="C.H LE MANS: 02.43.43.43.43"></div>
+            <div class="contact-card"><strong>GRANDS BRULES</strong><input type="text" value="C.H LE MANS: 02.43.43.43.43"></div>
+            <div class="contact-card"><strong>CENTRE ANTIPOISON</strong><input type="text" value="C.H.U ANGERS: 02.41.48.21.21"></div>
+            <div class="contact-card"><strong>HOPITAL</strong><input type="text" value="LE MANS: 02.43.43.43.43"></div>
+            <div class="contact-card"><strong>MEDECIN</strong><input type="text" value="Dr. RACAULT: 02.55.42.04.33"></div>
+            <div class="contact-card"><strong>PHARMACIE</strong><input type="text" value="SAVIGNE L’EVEQUE: 02.43.27.50.06"></div>
+        </div>
+        <div class="safety-warning">
+            <strong>Attention :</strong> Ne jamais transporter la victime avec un véhicule OGER ENERGIES ou PERSONNEL. Il faut le faire transporter par des personnes compétentes (Liste ci-dessus).
+        </div>
+
+        <h3>2.4 Installations de chantier</h3>
+        <table>
+            <thead><tr><th>LOCAUX</th><th>NATURE DES INSTALLATIONS</th><th>MISE À DISPOSITION</th></tr></thead>
+            <tbody>
+                <tr><td>Lieu de restauration</td><td><textarea>LES REPAS SONT PRIS A L’EXTERIEUR</textarea></td><td><textarea></textarea></td></tr>
+                <tr><td>Sanitaires</td><td><textarea>Sanitaire et points d’eau sur site</textarea></td><td><textarea>GC</textarea></td></tr>
+                <tr><td>Bureau de chantier</td><td><textarea></textarea></td><td><textarea>GC</textarea></td></tr>
+                <tr><td>Magasin de chantier</td><td><textarea></textarea></td><td><textarea></textarea></td></tr>
+                <tr><td>Installations électriques du chantier</td><td><textarea>Protection 30 mA</textarea></td><td><textarea>LOT ELECTRICITE</textarea></td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="page">
+        <h2 class="section-title">3 - MESURES DE PREVENTION</h2>
+        <h3>3.1 MESURES DE SECURITE</h3>
+        <label>CONDITIONS DE CIRCULATION & STATIONNEMENT SUR LE CHANTIER</label>
+        <textarea rows="2">Respecter les endroits réservés au stationnement des véhicules.</textarea>
+        
+        <label>TRANSPORT</label>
+        <textarea rows="3">LE PERSONNEL : Sur site déplacement à pieds. Entre le chantier et le lieu de restauration : avec les véhicules de la société.
+LE MATERIEL : Le matériel est livré directement sur le site. Les manutentions éventuelles sont réalisées par OGER ENERGIES.</textarea>
+        
+        <label>INCENDIE (Nature des extincteurs)</label>
+        <textarea rows="2">EN ZONE DE TRAVAIL : Mise à disposition d’un extincteur assuré par l’entreprise OGER ENERGIES.</textarea>
+        
+        <label>PROTECTION INDIVIDUELLE (Port obligatoire)</label>
+        <textarea rows="6">- Chaussures de sécurité
+- Vêtement de travail
+- Casque de sécurité
+- Gants de manutention pour tous travaux comportant des risques pour les mains
+- Lunettes de protection adaptées aux risques (perçage, meulage...)
+- Casque anti-bruit pour tous travaux exposant à des niveaux sonores supérieurs à 90 dB.</textarea>
+    </div>
+
+    <div class="page">
+        <h3>3.2 RISQUES GENERES PAR L’ACTIVITE DE L’ENTREPRISE SUR SES PROPRES SALARIES</h3>
+        <table>
+            <thead><tr><th>Description des tâches</th><th>Matériels</th><th>Risques</th><th>Mesures de prévention</th></tr></thead>
+            <tbody>
+                <tr><td><textarea rows="2">Passage de Câbles, Pose de chemins de câbles et luminaires</textarea></td><td><textarea rows="2">Travail en hauteur</textarea></td><td><textarea rows="2">Chutes</textarea></td><td><textarea rows="2">Nacelle, Echafaudage ou PIR</textarea></td></tr>
+                <tr><td><textarea rows="2">Câblage</textarea></td><td><textarea rows="2">Dérouleuse</textarea></td><td><textarea rows="2">Chute tourets</textarea></td><td><textarea rows="2">Utiliser des dérouleuses, Port des EPI</textarea></td></tr>
+                <tr><td><textarea rows="2">Tests électriques</textarea></td><td><textarea rows="2">Appareil de mesure</textarea></td><td><textarea rows="2">Court-circuit</textarea></td><td><textarea rows="2">Port des EPI, délimitation de la zone</textarea></td></tr>
+            </tbody>
+        </table>
+        
+        <h3>3.3 RISQUES GENERES PAR L’ACTIVITE DE L’ENTREPRISE SUR LES SALARIES DES AUTRES INTERVENANTS</h3>
+         <table>
+            <thead><tr><th>Description des tâches</th><th>Matériels</th><th>Risques</th><th>Mesures de prévention</th></tr></thead>
+            <tbody>
+                <tr><td><textarea rows="2">Passage de Câbles, Pose de chemins de câbles et luminaires</textarea></td><td><textarea rows="2">Travail en hauteur</textarea></td><td><textarea rows="2">Chutes</textarea></td><td><textarea rows="2">Casque</textarea></td></tr>
+                <tr><td><textarea rows="2">Câblage</textarea></td><td><textarea rows="2">Dérouleuse</textarea></td><td><textarea rows="2">Chute tourets</textarea></td><td><textarea rows="2">Port des EPI</textarea></td></tr>
+                <tr><td><textarea rows="2">Test électrique</textarea></td><td><textarea rows="2">Appareil de mesure</textarea></td><td><textarea rows="2">Court-circuit</textarea></td><td><textarea rows="2">Zone délimitée interdisant l’accès à toute personne non habilitée</textarea></td></tr>
+            </tbody>
+        </table>
+
+        <h3>3.4 RISQUES GENERES PAR LES AUTRES ENTREPRISES, LE CHANTIER ET L’ENVIRONNEMENT</h3>
+        <h4>3.4.1 Travaux d’autres entreprises</h4>
+        <table><thead><tr><th>Description des tâches</th><th>Matériels</th><th>Risques</th><th>Mesures de prévention</th></tr></thead><tbody><tr><td><textarea></textarea></td><td><textarea></textarea></td><td><textarea></textarea></td><td><textarea></textarea></td></tr></tbody></table>
+        <h4>3.4.2 Contraintes propres au chantier et son environnement</h4>
+        <table><thead><tr><th>Description des tâches</th><th>Matériels</th><th>Risques</th><th>Mesures de prévention</th></tr></thead><tbody><tr><td><textarea></textarea></td><td><textarea></textarea></td><td><textarea></textarea></td><td><textarea></textarea></td></tr></tbody></table>
+    </div>
+    
+    <div class="page">
+        <h2 class="section-title">SIGNATURES</h2>
+         <div class="signature-section">
+            <h4>AVIS EMIS A SA DEMANDE PAR LE MEDECIN DU TRAVAIL</h4>
+            <label>OPERATION :</label><input type="text" value="SCI CYRONO - Extension d’un atelier de production FORP...">
+            <label>Commentaires :</label><textarea rows="3"></textarea>
+            <div class="signature-line">
+                <span>Date :</span>
+                <!-- MODIFICATION : Ajout d'une zone de signature ici aussi -->
+                <div class="signature-pad" style="width: 250px; text-align: right;">
+                    <label style="text-align: right; margin: 0; font-size: 13px;">Signature</label>
+                    <canvas id="signature-canvas-medecin" class="signature-canvas" style="height: 50px;"></canvas>
+                    <button type="button" class="clear-signature-btn" data-canvas-id="signature-canvas-medecin">Effacer</button>
+                </div>
+            </div>
+        </div>
+        
+        <h2 class="section-title">4 - PRESENTATION DU PPSPS AU PERSONNEL DE CHANTIER</h2>
+        <p>Le personnel ci-dessous signataire reconnaît que le présent PPSPS lui a été présenté et commenté :</p>
+        <table class="signatures-table">
+            <thead><tr><th>Date</th><th>Nom</th><th>Prénom</th><th>Signature</th></tr></thead>
+            <tbody>
+                <!-- MODIFICATION : Ajout de canvas dans la colonne signature -->
+                <tr>
+                    <td><input type="date"></td>
+                    <td><input type="text"></td>
+                    <td><input type="text"></td>
+                    <td style="text-align: center;">
+                        <canvas id="signature-personnel-1" class="signature-canvas" style="width: 150px; height: 40px;"></canvas>
+                        <button type="button" class="clear-signature-btn" data-canvas-id="signature-personnel-1">Effacer</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="date"></td>
+                    <td><input type="text"></td>
+                    <td><input type="text"></td>
+                    <td style="text-align: center;">
+                        <canvas id="signature-personnel-2" class="signature-canvas" style="width: 150px; height: 40px;"></canvas>
+                        <button type="button" class="clear-signature-btn" data-canvas-id="signature-personnel-2">Effacer</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="date"></td>
+                    <td><input type="text"></td>
+                    <td><input type="text"></td>
+                    <td style="text-align: center;">
+                        <canvas id="signature-personnel-3" class="signature-canvas" style="width: 150px; height: 40px;"></canvas>
+                        <button type="button" class="clear-signature-btn" data-canvas-id="signature-personnel-3">Effacer</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="date"></td>
+                    <td><input type="text"></td>
+                    <td><input type="text"></td>
+                    <td style="text-align: center;">
+                        <canvas id="signature-personnel-4" class="signature-canvas" style="width: 150px; height: 40px;"></canvas>
+                        <button type="button" class="clear-signature-btn" data-canvas-id="signature-personnel-4">Effacer</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <footer>
+            <p>Oger Energies - 22 rue André Citroën 72000 LE MANS - Tél : 02 43 87 11 30 - RCS 503 880 767 00028</p>
+        </footer>
+    </div>
+
+    <div class="page">
+        <div class="accident-poster">
+            <header class="poster-header">EN CAS D’ACCIDENT</header>
+            <div class="poster-main">
+                <div class="poster-instructions">
+                    <div class="poster-phone"><input type="text" value="Téléphonez au 18 (Pompier), 17 (Police), 15 (Samu) ou au 112 (portable gratuit)"></div>
+                    <h2>... Et dites :</h2>
+                    <div class="poster-step"><div class="step-number">1</div><div class="step-content"><label>Où vous êtes :</label><textarea rows="4">Commune: SAVIGNE L’EVEQUE
+Rue: ZAC DE L’EPINE
+Situation: FORP 72460 SAVIGNE L’EVEQUE
+Téléphone: 02.43.82.40.52</textarea></div></div>
+                    <div class="poster-step"><div class="step-number">2</div><div class="step-content"><label>Ce qu'il se passe :</label><textarea rows="3">* Par exemple : éboulement, chute, électrisé…
+* La position du blessé : sur le toit, au sol...
+* S’il y a nécessité de dégagement.</textarea></div></div>
+                    <div class="poster-step"><div class="step-number">3</div><div class="step-content"><label>Le nombre et l'état des blessés :</label><textarea rows="2">* Par exemple : 3 blessés dont un saigne beaucoup...</textarea></div></div>
+                    <div class="poster-step"><div class="step-number">4</div><div class="step-content"><label>Guider les secours :</label><textarea rows="2">Envoyer quelqu’un au point d'accès pour guider les secours.</textarea></div></div>
+                    <div class="poster-step"><div class="step-number">5</div><div class="step-content"><label>Ne raccrochez pas !</label><textarea rows="2">Faire répéter le message.</textarea></div></div>
+                </div>
+                <div class="poster-contacts">
+                    <h3>À PRÉVENIR</h3>
+                    <div class="contact-item"><input type="text" value="OGER ENERGIES"><input type="text" value="02.43.87.11.30"></div>
+                    <div class="contact-item"><input type="text" value="Médecin"><input type="text" value="02.55.42.04.33"></div>
+                    <div class="contact-item"><input type="text" value="Centre anti-poison"><input type="text" value="02.41.48.21.21"></div>
+                    <div class="contact-item"><input type="text" value="Ophtalmologiste"><input type="text" value="02.43.43.43.21"></div>
+                    <div class="contact-item"><input type="text" value="Médecin du travail"><input type="text" value="02.43.74.04.04"></div>
+                    <div class="contact-item"><input type="text" value="SECOURS ENEDIS"><input type="text" value="09 726 750 72"></div>
+                    <div class="contact-item"><input type="text" value="GRANDS BRULES"><input type="text" value="02.43.43.43.43"></div>
+                    <div class="contact-item"><input type="text" value="SECOURS GDF"><input type="text" value="0810.433.072"></div>
+                    <div class="contact-item"><input type="text" value="Inspection du travail"><input type="text" value="02.43.39.41.41"></div>
+                    <div class="contact-item"><input type="text" value="CARSAT LE MANS"><input type="text" value="02.51.72.82.92"></div>
+                    <div class="contact-item"><input type="text" value="Coordinateur SPS"><input type="text" value="06.18.06.17.58"></div>
+                    <div class="contact-item"><input type="text" value="OPPBTP"><input type="text" value="02.40.49.68.02"></div>
+                    <div class="contact-item"><input type="text" value="Maître d’ouvrage"><input type="text" value="02.43.82.40.52"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
